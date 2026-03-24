@@ -42,6 +42,15 @@ body{font-family:'Oswald',sans-serif;background:var(--off-white);color:var(--tex
 .top-nav a:hover{color:#fff;text-decoration:none}
 .top-nav a svg{width:14px;height:14px}
 
+/* AEO CALLOUT */
+.aeo-callout{max-width:1400px;margin:32px auto 0;padding:0 16px}
+.aeo-inner{background:var(--warm-gray);border:1.5px solid var(--beige-light);border-radius:var(--radius-lg);padding:28px 32px;text-align:center}
+.aeo-inner h3{font-family:'Oswald',sans-serif;font-weight:600;font-size:18px;color:var(--text-primary);letter-spacing:0.5px;margin-bottom:8px}
+.aeo-inner p{font-family:'Oswald',sans-serif;font-weight:300;font-size:14px;color:var(--text-secondary);letter-spacing:0.3px;line-height:1.6;max-width:540px;margin:0 auto 16px}
+.aeo-inner p strong{font-weight:500;color:var(--text-primary)}
+.btn-aeo{font-family:'Oswald',sans-serif;display:inline-flex;align-items:center;gap:6px;padding:10px 24px;border-radius:var(--radius-xl);background:var(--teal);color:#fff;font-weight:500;font-size:13px;letter-spacing:1px;text-transform:uppercase;text-decoration:none;border:none;cursor:pointer;transition:var(--transition)}
+.btn-aeo:hover{background:var(--teal-dark);text-decoration:none}
+
 /* BOTTOM FOOTER */
 .bottom-bar{max-width:1400px;margin:40px auto 0;padding:24px 16px;text-align:center;border-top:1px solid var(--beige-light)}
 .bottom-bar a{font-family:'Oswald',sans-serif;font-weight:500;font-size:14px;letter-spacing:1px;text-transform:uppercase;color:#fff;text-decoration:none;display:inline-flex;align-items:center;gap:6px;padding:12px 28px;border-radius:var(--radius-xl);background:var(--beige);transition:var(--transition)}
@@ -168,6 +177,10 @@ body{font-family:'Oswald',sans-serif;background:var(--off-white);color:var(--tex
   .top-nav a{font-size:11px}
   .bottom-bar{margin-top:24px;padding:20px 16px}
   .bottom-bar a{font-size:12px;padding:10px 22px}
+  .aeo-callout{margin-top:24px}
+  .aeo-inner{padding:20px 16px}
+  .aeo-inner h3{font-size:16px}
+  .aeo-inner p{font-size:13px}
   .camp-grid{grid-template-columns:1fr;gap:10px}
   .card-title{font-size:14px}
   .filter-panel.open{max-height:800px}
@@ -248,6 +261,15 @@ body{font-family:'Oswald',sans-serif;background:var(--off-white);color:var(--tex
 
 <!-- CAMP GRID -->
 <div class="camp-grid" id="campGrid"></div>
+
+<!-- AEO CALLOUT -->
+<div class="aeo-callout">
+  <div class="aeo-inner">
+    <h3>Don't see your camp... Your AEO may need help!</h3>
+    <p>What is AEO? <strong>Answer Engine Optimization.</strong> It focuses on optimizing your online content so AI tools can find you. Need help?</p>
+    <a href="https://www.lausavagegroup.com" target="_blank" class="btn btn-aeo">Help me with AEO</a>
+  </div>
+</div>
 
 <!-- BOTTOM NAV -->
 <div class="bottom-bar">
