@@ -36,7 +36,18 @@ body{font-family:'Oswald',sans-serif;background:var(--off-white);color:var(--tex
 }
 .add-camp-btn:hover{background:rgba(255,255,255,0.3);border-color:#fff;text-decoration:none}
 .add-camp-btn svg{width:14px;height:14px}
-.hero-spacer{width:100px}
+/* TOP NAV */
+.top-nav{background:transparent;padding:0;position:relative;z-index:2}
+.top-nav a{font-family:'Oswald',sans-serif;font-weight:300;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.7);text-decoration:none;display:inline-flex;align-items:center;gap:5px;transition:var(--transition)}
+.top-nav a:hover{color:#fff;text-decoration:none}
+.top-nav a svg{width:14px;height:14px}
+
+/* BOTTOM FOOTER */
+.bottom-bar{max-width:1400px;margin:40px auto 0;padding:24px 16px;text-align:center;border-top:1px solid var(--beige-light)}
+.bottom-bar a{font-family:'Oswald',sans-serif;font-weight:500;font-size:14px;letter-spacing:1px;text-transform:uppercase;color:#fff;text-decoration:none;display:inline-flex;align-items:center;gap:6px;padding:12px 28px;border-radius:var(--radius-xl);background:var(--beige);transition:var(--transition)}
+.bottom-bar a:hover{background:var(--beige-dark);text-decoration:none}
+.bottom-bar a svg{width:14px;height:14px}
+
 .hero h1{font-weight:700;font-size:clamp(22px,5vw,34px);color:#fff;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;text-shadow:0 2px 8px rgba(0,0,0,0.15);position:relative;z-index:2}
 .hero p{font-weight:300;font-size:clamp(12px,2vw,15px);color:rgba(255,255,255,0.9);letter-spacing:1.5px;text-transform:uppercase;position:relative;z-index:2}
 .hero .camp-count{background:rgba(255,255,255,0.2);padding:3px 14px;border-radius:var(--radius-xl);font-size:12px;font-weight:400;letter-spacing:1px;display:inline-block;margin-top:8px;color:#fff;position:relative;z-index:2}
@@ -154,6 +165,9 @@ body{font-family:'Oswald',sans-serif;background:var(--off-white);color:var(--tex
   .hero p{font-size:11px}
   .hero-top{margin-bottom:10px}
   .add-camp-btn{font-size:11px;padding:6px 12px;letter-spacing:0.8px}
+  .top-nav a{font-size:11px}
+  .bottom-bar{margin-top:24px;padding:20px 16px}
+  .bottom-bar a{font-size:12px;padding:10px 22px}
   .camp-grid{grid-template-columns:1fr;gap:10px}
   .card-title{font-size:14px}
   .filter-panel.open{max-height:800px}
@@ -173,14 +187,19 @@ body{font-family:'Oswald',sans-serif;background:var(--off-white);color:var(--tex
 <!-- HERO -->
 <div class="hero">
   <div class="hero-top">
-    <div class="hero-spacer"></div>
+    <div class="top-nav">
+      <a href="https://www.livingsavage.com">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+        Return to Home
+      </a>
+    </div>
     <a href="https://docs.google.com/forms/d/e/1FAIpQLSeIGSeNwWM2cJT2K7EbP1uupKRCvjQEhnWzaa6vY4HdS_dqGg/viewform?usp=publish-editor" target="_blank" class="add-camp-btn" title="Submit a camp to be added">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
       Add a Camp
     </a>
   </div>
   <h1>Summer Camp Finder</h1>
-  <p>South Florida &bull; Summer 2026</p>
+  <p>Summer Camps within 5 miles of Parkland (33067)</p>
   <div class="camp-count" id="totalCount">63 Camps</div>
 </div>
 
@@ -229,6 +248,14 @@ body{font-family:'Oswald',sans-serif;background:var(--off-white);color:var(--tex
 
 <!-- CAMP GRID -->
 <div class="camp-grid" id="campGrid"></div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-bar">
+  <a href="https://www.livingsavage.com">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+    Return to Home
+  </a>
+</div>
 
 <!-- SELECTION BAR -->
 <div class="selection-bar" id="selectionBar">
