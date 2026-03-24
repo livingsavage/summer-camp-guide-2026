@@ -1,19 +1,686 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Summer Camp Guide 2026</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Summer Camp Finder 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+--blue:#A8C2CE;--blue-dark:#7BA3B4;--blue-light:#D4E4EC;--blue-pale:#EDF4F7;
+--beige:#BEAF9A;--beige-dark:#A89474;--beige-light:#D8CEBD;--beige-pale:#F0EBE3;
+--ivory:#FFFFFF;--off-white:#FAFAF8;--warm-gray:#F5F3F0;
+--text-primary:#2C3E50;--text-secondary:#5A6B7A;--text-muted:#8E99A4;
+--shadow-sm:0 1px 3px rgba(44,62,80,0.06);
+--shadow-md:0 4px 12px rgba(44,62,80,0.08);
+--shadow-lg:0 8px 30px rgba(44,62,80,0.12);
+--shadow-xl:0 12px 40px rgba(44,62,80,0.16);
+--radius-sm:8px;--radius-md:12px;--radius-lg:16px;--radius-xl:20px;
+--transition:all 0.25s cubic-bezier(0.4,0,0.2,1);
+}
+html{scroll-behavior:smooth}
+body{font-family:'Oswald',sans-serif;background:var(--off-white);color:var(--text-primary);line-height:1.5;-webkit-font-smoothing:antialiased}
+
+/* HERO SECTION */
+.hero{background:linear-gradient(135deg,var(--blue) 0%,var(--blue-dark) 50%,var(--beige) 100%);padding:32px 24px 28px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 30% 50%,rgba(255,255,255,0.08) 0%,transparent 60%);pointer-events:none}
+.hero h1{font-family:'Oswald',sans-serif;font-weight:700;font-size:clamp(22px,4vw,36px);color:#fff;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;text-shadow:0 2px 8px rgba(0,0,0,0.15)}
+.hero p{font-family:'Oswald',sans-serif;font-weight:300;font-size:clamp(12px,1.8vw,15px);color:rgba(255,255,255,0.9);letter-spacing:1.5px;text-transform:uppercase}
+
+/* SEARCH BAR */
+.search-wrap{max-width:600px;margin:-18px auto 0;position:relative;z-index:10;padding:0 16px}
+.search-box{display:flex;align-items:center;background:#fff;border-radius:var(--radius-xl);box-shadow:var(--shadow-lg);padding:4px 4px 4px 18px;border:2px solid transparent;transition:var(--transition)}
+.search-box:focus-within{border-color:var(--blue);box-shadow:var(--shadow-xl)}
+.search-box svg{width:18px;height:18px;color:var(--text-muted);flex-shrink:0}
+.search-box input{flex:1;border:none;outline:none;font-family:'Oswald',sans-serif;font-size:15px;font-weight:400;padding:10px 12px;background:transparent;color:var(--text-primary);letter-spacing:0.5px}
+.search-box input::placeholder{color:var(--text-muted);font-weight:300}
+.search-clear{width:32px;height:32px;border-radius:50%;border:none;background:var(--warm-gray);color:var(--text-muted);cursor:pointer;display:none;align-items:center;justify-content:center;transition:var(--transition);font-size:16px}
+.search-clear.visible{display:flex}
+.search-clear:hover{background:var(--blue-pale);color:var(--blue-dark)}
+
+/* TOOLBAR */
+.toolbar{max-width:1400px;margin:24px auto 0;padding:0 16px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px}
+.toolbar-left{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.toolbar-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.result-count{font-family:'Oswald',sans-serif;font-weight:400;font-size:14px;color:var(--text-secondary);letter-spacing:0.5px}
+.result-count span{font-weight:600;color:var(--text-primary)}
+
+/* BUTTONS */
+.btn{font-family:'Oswald',sans-serif;font-weight:500;font-size:12px;letter-spacing:1px;text-transform:uppercase;padding:8px 14px;border-radius:var(--radius-sm);border:none;cursor:pointer;transition:var(--transition);display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.btn svg{width:14px;height:14px}
+.btn-outline{background:transparent;border:1.5px solid var(--beige);color:var(--text-secondary)}
+.btn-outline:hover{background:var(--beige-pale);border-color:var(--beige-dark);color:var(--text-primary)}
+.btn-solid{background:var(--blue);color:#fff}
+.btn-solid:hover{background:var(--blue-dark)}
+.btn-teal{background:#2A9D8F;color:#fff}
+.btn-teal:hover{background:#238B7E}
+.btn-navy{background:var(--text-primary);color:#fff}
+.btn-navy:hover{background:#1a2a3a}
+.btn-compare{background:var(--beige);color:#fff}
+.btn-compare:hover{background:var(--beige-dark)}
+.btn:disabled{opacity:0.4;cursor:not-allowed;pointer-events:none}
+
+/* SORT SELECT */
+.sort-select{font-family:'Oswald',sans-serif;font-size:12px;font-weight:400;letter-spacing:0.5px;padding:8px 32px 8px 12px;border:1.5px solid var(--beige-light);border-radius:var(--radius-sm);background:transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='%235A6B7A'%3E%3Cpath d='M6 8L0 0h12z'/%3E%3C/svg%3E") right 10px center/10px no-repeat;color:var(--text-secondary);cursor:pointer;-webkit-appearance:none;appearance:none;transition:var(--transition)}
+.sort-select:focus{outline:none;border-color:var(--blue)}
+
+/* SELECTION BAR */
+.selection-bar{max-width:1400px;margin:12px auto 0;padding:0 16px;display:none;align-items:center;gap:12px;animation:slideDown 0.3s ease;flex-wrap:wrap}
+.selection-bar.active{display:flex}
+.selection-pill{background:var(--blue-pale);border:1.5px solid var(--blue);border-radius:var(--radius-xl);padding:6px 16px;display:flex;align-items:center;gap:8px;font-family:'Oswald',sans-serif;font-size:13px;font-weight:500;color:var(--blue-dark);letter-spacing:0.5px}
+.selection-pill .count{background:var(--blue);color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600}
+
+/* FILTER CHIPS */
+.filter-section{max-width:1400px;margin:16px auto 0;padding:0 16px}
+.filter-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.filter-label{font-family:'Oswald',sans-serif;font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px}
+.chip{font-family:'Oswald',sans-serif;font-size:12px;font-weight:400;letter-spacing:0.5px;padding:5px 12px;border-radius:var(--radius-xl);border:1.5px solid var(--beige-light);background:transparent;color:var(--text-secondary);cursor:pointer;transition:var(--transition);white-space:nowrap}
+.chip:hover{border-color:var(--blue);color:var(--blue-dark);background:var(--blue-pale)}
+.chip.active{background:var(--blue);border-color:var(--blue);color:#fff}
+.active-filters{max-width:1400px;margin:6px auto 0;padding:0 16px;display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.active-tag{font-family:'Oswald',sans-serif;font-size:11px;font-weight:400;letter-spacing:0.5px;padding:3px 10px;border-radius:var(--radius-xl);background:var(--beige-pale);color:var(--beige-dark);display:flex;align-items:center;gap:5px;cursor:pointer;transition:var(--transition)}
+.active-tag:hover{background:var(--beige-light)}
+.active-tag .x{font-weight:600;font-size:14px}
+.clear-all{font-family:'Oswald',sans-serif;font-size:12px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--blue-dark);cursor:pointer;padding:4px 8px;transition:var(--transition)}
+.clear-all:hover{text-decoration:underline}
+
+/* FILTER COLLAPSIBLE */
+.filter-toggle{display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;margin-bottom:12px}
+.filter-toggle-icon{width:28px;height:28px;border-radius:50%;background:var(--blue-pale);display:flex;align-items:center;justify-content:center;transition:var(--transition)}
+.filter-toggle-icon svg{width:14px;height:14px;color:var(--blue-dark);transition:transform 0.3s ease}
+.filter-toggle.open .filter-toggle-icon svg{transform:rotate(180deg)}
+.filter-toggle span{font-family:'Oswald',sans-serif;font-size:13px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--text-secondary)}
+.filter-body{max-height:0;overflow:hidden;transition:max-height 0.4s ease}
+.filter-body.open{max-height:600px}
+
+/* AGE RANGE SLIDER */
+.age-slider-wrap{display:flex;align-items:center;gap:12px;padding:4px 0}
+.age-slider-wrap label{font-family:'Oswald',sans-serif;font-size:13px;font-weight:400;color:var(--text-secondary);letter-spacing:0.5px}
+.age-slider-wrap input[type=range]{-webkit-appearance:none;appearance:none;width:120px;height:4px;background:var(--beige-light);border-radius:2px;outline:none}
+.age-slider-wrap input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--blue);cursor:pointer;border:2px solid #fff;box-shadow:var(--shadow-sm)}
+.age-val{font-family:'Oswald',sans-serif;font-size:14px;font-weight:600;color:var(--text-primary);min-width:20px;text-align:center}
+
+/* CAMP GRID */
+.camp-grid{max-width:1400px;margin:20px auto;padding:0 16px;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+
+/* CAMP CARD */
+.camp-card{background:#fff;border-radius:var(--radius-md);box-shadow:var(--shadow-sm);border:1.5px solid transparent;transition:var(--transition);position:relative;display:flex;flex-direction:column;overflow:hidden}
+.camp-card:hover{box-shadow:var(--shadow-md);transform:translateY(-1px);border-color:var(--blue-light)}
+.camp-card.selected{border-color:var(--blue);box-shadow:var(--shadow-md)}
+.card-header{padding:14px 14px 8px;display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.card-check{width:20px;height:20px;border-radius:5px;border:2px solid var(--beige-light);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--transition);flex-shrink:0;margin-top:1px}
+.camp-card.selected .card-check{background:var(--blue);border-color:var(--blue)}
+.card-check svg{width:12px;height:12px;color:#fff;opacity:0;transition:var(--transition)}
+.camp-card.selected .card-check svg{opacity:1}
+.card-title-area{flex:1;min-width:0}
+.card-title{font-family:'Oswald',sans-serif;font-weight:600;font-size:15px;color:var(--text-primary);letter-spacing:0.3px;line-height:1.25;margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.card-provider{font-family:'Oswald',sans-serif;font-weight:300;font-size:12px;color:var(--text-muted);letter-spacing:0.4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.card-body{padding:0 14px 10px;flex:1}
+.card-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px}
+.card-tag{font-family:'Oswald',sans-serif;font-size:10px;font-weight:400;letter-spacing:0.7px;text-transform:uppercase;padding:3px 8px;border-radius:var(--radius-xl);background:var(--blue-pale);color:var(--blue-dark)}
+.card-details{display:flex;flex-wrap:wrap;gap:4px 12px}
+.card-detail{display:flex;align-items:center;gap:5px;font-family:'Oswald',sans-serif;font-size:12px;font-weight:400;color:var(--text-secondary);letter-spacing:0.2px}
+.card-detail svg{width:13px;height:13px;color:var(--beige);flex-shrink:0}
+.card-detail strong{font-weight:500;color:var(--text-primary)}
+.card-footer{padding:10px 14px 12px;display:flex;gap:6px;border-top:1px solid var(--warm-gray)}
+.card-footer .btn{flex:1;justify-content:center;font-size:11px;padding:7px 10px}
+
+/* NO RESULTS */
+.no-results{text-align:center;padding:60px 20px;grid-column:1/-1}
+.no-results svg{width:48px;height:48px;color:var(--beige-light);margin-bottom:12px}
+.no-results h3{font-family:'Oswald',sans-serif;font-weight:500;font-size:18px;color:var(--text-secondary);margin-bottom:6px;letter-spacing:0.5px}
+.no-results p{font-family:'Oswald',sans-serif;font-weight:300;font-size:13px;color:var(--text-muted);letter-spacing:0.3px}
+
+/* MODAL OVERLAY */
+.modal-overlay{position:fixed;inset:0;background:rgba(44,62,80,0.5);backdrop-filter:blur(4px);z-index:1000;display:none;align-items:center;justify-content:center;padding:12px;animation:fadeIn 0.25s ease}
+.modal-overlay.active{display:flex}
+.modal{background:#fff;border-radius:var(--radius-xl);box-shadow:var(--shadow-xl);width:100%;max-width:660px;max-height:85vh;overflow-y:auto;position:relative;animation:slideUp 0.3s ease}
+.modal-close{position:absolute;top:12px;right:12px;width:32px;height:32px;border-radius:50%;border:none;background:var(--warm-gray);color:var(--text-muted);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--transition);z-index:10}
+.modal-close:hover{background:var(--blue-pale);color:var(--blue-dark)}
+.modal-header{padding:24px 24px 0;border-bottom:none}
+.modal-header h2{font-family:'Oswald',sans-serif;font-weight:600;font-size:22px;color:var(--text-primary);letter-spacing:0.5px;margin-bottom:3px}
+.modal-header p{font-family:'Oswald',sans-serif;font-weight:300;font-size:13px;color:var(--text-muted);letter-spacing:0.5px}
+.modal-body{padding:20px 24px 24px}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.detail-item{padding:10px;background:var(--warm-gray);border-radius:var(--radius-sm)}
+.detail-item.full{grid-column:1/-1}
+.detail-label{font-family:'Oswald',sans-serif;font-size:10px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:3px}
+.detail-value{font-family:'Oswald',sans-serif;font-size:13px;font-weight:400;color:var(--text-primary);letter-spacing:0.3px}
+.detail-value a{color:var(--blue-dark);text-decoration:none}
+.detail-value a:hover{text-decoration:underline}
+.modal-actions{padding:0 24px 20px;display:flex;gap:8px}
+
+/* COMPARE MODAL */
+.compare-modal{max-width:95vw;width:auto;min-width:600px}
+.compare-scroll{overflow-x:auto;padding:0 24px 24px}
+.compare-table{width:100%;border-collapse:collapse;font-family:'Oswald',sans-serif}
+.compare-table th{font-size:10px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);padding:8px 14px;text-align:left;white-space:nowrap;background:var(--warm-gray);position:sticky;left:0;z-index:2;min-width:120px}
+.compare-table td{font-size:13px;font-weight:400;color:var(--text-primary);padding:8px 14px;border-bottom:1px solid var(--warm-gray);min-width:180px;vertical-align:top;letter-spacing:0.3px}
+.compare-table tr:last-child td{border-bottom:none}
+.compare-camp-name{font-weight:600;font-size:15px;margin-bottom:4px}
+
+/* ANIMATIONS */
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+.hero{padding:24px 16px 22px}
+.hero h1{font-size:22px;letter-spacing:1.5px}
+.hero p{font-size:12px;letter-spacing:1px}
+.search-wrap{margin-top:-14px;padding:0 12px}
+.search-box{padding:3px 3px 3px 14px}
+.search-box input{font-size:14px;padding:8px 10px}
+.search-clear{width:28px;height:28px;font-size:14px}
+.camp-grid{grid-template-columns:1fr;gap:10px;padding:0 12px}
+.card-header{padding:12px 12px 6px}
+.card-body{padding:0 12px 8px}
+.card-footer{padding:8px 12px 10px}
+.card-footer .btn{padding:6px 8px;font-size:11px}
+.card-details{gap:2px 10px}
+.toolbar{flex-direction:column;align-items:stretch;padding:0 12px;margin-top:18px;gap:8px}
+.toolbar-left,.toolbar-right{justify-content:space-between}
+.filter-section{padding:0 12px;margin-top:12px}
+.chip{font-size:11px;padding:4px 10px}
+.selection-bar{padding:0 12px;gap:10px;flex-wrap:wrap}
+.selection-pill{padding:6px 14px;font-size:13px}
+.detail-grid{grid-template-columns:1fr}
+.modal{margin:8px;border-radius:var(--radius-lg)}
+.modal-header{padding:24px 20px 0}
+.modal-header h2{font-size:20px}
+.modal-body{padding:16px 20px 24px}
+.modal-actions{padding:0 20px 20px}
+.compare-modal{min-width:unset}
+.compare-scroll{padding:0 16px 24px}
+.filter-row{gap:5px}
+.age-slider-wrap{flex-wrap:wrap;gap:8px}
+.age-slider-wrap input[type=range]{width:100px}
+.btn{font-size:11px;padding:7px 12px}
+.sort-select{font-size:12px;padding:8px 30px 8px 12px}
+.active-filters{padding:0 12px}
+}
+@media(max-width:380px){
+.hero{padding:20px 12px 18px}
+.hero h1{font-size:19px}
+.camp-grid{padding:0 8px;gap:8px}
+.card-title{font-size:14px}
+.card-tag{font-size:9px;padding:2px 6px}
+.card-detail{font-size:11px}
+.toolbar{padding:0 8px}
+.filter-section{padding:0 8px}
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--beige-light);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--beige)}
+
+/* NAV BAR */
+.nav-bar{background:#fff;padding:10px 20px;display:flex;align-items:center;border-bottom:1px solid var(--warm-gray)}
+.nav-bar a{font-family:'Oswald',sans-serif;font-weight:400;font-size:13px;letter-spacing:1px;text-transform:uppercase;color:var(--text-secondary);text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:var(--transition)}
+.nav-bar a:hover{color:var(--blue-dark)}
+.nav-bar a svg{width:14px;height:14px}
+
+/* FOOTER BAR */
+.footer-bar{background:#fff;border-top:1px solid var(--warm-gray);padding:20px;text-align:center;margin-top:20px}
+.footer-bar a{font-family:'Oswald',sans-serif;font-weight:500;font-size:13px;letter-spacing:1px;text-transform:uppercase;color:#fff;text-decoration:none;background:var(--beige);padding:10px 28px;border-radius:var(--radius-sm);display:inline-flex;align-items:center;gap:6px;transition:var(--transition)}
+.footer-bar a:hover{background:var(--beige-dark)}
+.footer-bar a svg{width:14px;height:14px}
+
+/* AEO CALLOUT */
+.aeo-callout{max-width:1400px;margin:32px auto 0;padding:0 16px}
+.aeo-inner{background:var(--warm-gray);border:1.5px solid var(--beige-light);border-radius:var(--radius-lg);padding:32px;text-align:center}
+.aeo-inner h3{font-family:'Oswald',sans-serif;font-weight:600;font-size:20px;color:var(--text-primary);letter-spacing:0.5px;margin-bottom:8px}
+.aeo-inner p{font-family:'Oswald',sans-serif;font-weight:300;font-size:14px;color:var(--text-secondary);letter-spacing:0.3px;max-width:520px;margin:0 auto 20px;line-height:1.6}
+.aeo-btn{font-size:13px!important;padding:10px 24px!important}
+
+@media(max-width:768px){
+.nav-bar{padding:8px 12px}
+.nav-bar a{font-size:12px}
+.footer-bar{padding:16px 12px;margin-top:16px}
+.footer-bar a{font-size:12px;padding:9px 22px}
+.aeo-callout{padding:0 12px;margin-top:24px}
+.aeo-inner{padding:24px 16px}
+.aeo-inner h3{font-size:17px}
+.aeo-inner p{font-size:13px}
+}
+</style>
 </head>
 <body>
-    <header>
-        <h1>Summer Camps within 15 miles of Parkland (33067)</h1>
-    </header>
-    <main>
-        <section>
-            <h2>Featured Camps</h2>
-            <!-- Content goes here -->
-        </section>
-    </main>
+
+<!-- NAV BAR -->
+<div class="nav-bar">
+<a href="https://www.livingsavage.com"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>Return to Home</a>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+<h1>Summer Camp Finder 2026</h1>
+<p>Summer Camps within 12 miles of Parkland (33067)</p>
+</div>
+
+<!-- SEARCH -->
+<div class="search-wrap">
+<div class="search-box">
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+<input type="text" id="searchInput" placeholder="Search camps by name, city, zip, or type...">
+<button class="search-clear" id="searchClear" onclick="clearSearch()">&times;</button>
+</div>
+</div>
+
+<!-- FILTERS -->
+<div class="filter-section">
+<div class="filter-toggle" id="filterToggle" onclick="toggleFilters()">
+<div class="filter-toggle-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></div>
+<span>Filters</span>
+</div>
+<div class="filter-body" id="filterBody">
+<div class="filter-label">Category</div>
+<div class="filter-row" id="categoryFilters"></div>
+<div class="filter-label" style="margin-top:12px">City</div>
+<div class="filter-row" id="cityFilters"></div>
+<div class="filter-label" style="margin-top:12px">Zip Code</div>
+<div class="filter-row" id="zipFilters"></div>
+<div class="filter-label" style="margin-top:12px">Age Range</div>
+<div class="age-slider-wrap">
+<label>Min Age</label>
+<span class="age-val" id="ageMinVal">2</span>
+<input type="range" id="ageMinSlider" min="2" max="16" value="2" oninput="updateAgeFilter()">
+<label style="margin-left:16px">Max Age</label>
+<span class="age-val" id="ageMaxVal">16</span>
+<input type="range" id="ageMaxSlider" min="2" max="16" value="16" oninput="updateAgeFilter()">
+</div>
+</div>
+</div>
+<div class="active-filters" id="activeFilters"></div>
+
+<!-- TOOLBAR -->
+<div class="toolbar">
+<div class="toolbar-left">
+<div class="result-count" id="resultCount"><span>63</span> camps found</div>
+</div>
+<div class="toolbar-right">
+<select class="sort-select" id="sortSelect" onchange="renderCamps()">
+<option value="name-asc">A → Z</option>
+<option value="name-desc">Z → A</option>
+<option value="city-asc">City A → Z</option>
+<option value="date-asc">Start Date ↑</option>
+</select>
+<button class="btn btn-outline" onclick="exportCSV('filtered')"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Export All</button>
+</div>
+</div>
+
+<!-- SELECTION BAR -->
+<div class="selection-bar" id="selectionBar">
+<div class="selection-pill"><span class="count" id="selCount">0</span><span id="selLabel">camps selected</span></div>
+<button class="btn btn-compare" onclick="openCompare()"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>Compare</button>
+<button class="btn btn-outline" onclick="exportCSV('selected')"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Export Selected</button>
+<button class="btn btn-outline" onclick="clearSelection()">Clear All</button>
+</div>
+
+<!-- CAMP GRID -->
+<div class="camp-grid" id="campGrid"></div>
+
+<!-- DETAIL MODAL -->
+<div class="modal-overlay" id="detailModal">
+<div class="modal">
+<button class="modal-close" onclick="closeModal('detailModal')">&times;</button>
+<div class="modal-header"><h2 id="modalTitle"></h2><p id="modalProvider"></p></div>
+<div class="modal-body"><div class="detail-grid" id="modalGrid"></div></div>
+<div class="modal-actions" id="modalActions"></div>
+</div>
+</div>
+
+<!-- COMPARE MODAL -->
+<div class="modal-overlay" id="compareModal">
+<div class="modal compare-modal">
+<button class="modal-close" onclick="closeModal('compareModal')">&times;</button>
+<div class="modal-header"><h2>Compare Camps</h2><p id="compareCount"></p></div>
+<div class="compare-scroll"><table class="compare-table" id="compareTable"></table></div>
+</div>
+</div>
+
+<!-- AEO CALLOUT -->
+<div class="aeo-callout">
+<div class="aeo-inner">
+<h3>Don't see your camp...Your AEO may need help!</h3>
+<p>What is AEO? Answer Engine Optimization. It focuses on optimizing your online content so AI tools can find you. Need help?</p>
+<a href="https://www.lausavagegroup.com" class="btn btn-teal aeo-btn"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>Help me with AEO</a>
+</div>
+</div>
+
+<!-- FOOTER BAR -->
+<div class="footer-bar">
+<a href="https://www.livingsavage.com"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>Return to Home</a>
+</div>
+
+<script>
+const CAMPS=[{"id":"camp_001","camp_name":"Boca Raton Museum of Art Camp","provider_name":"Boca Raton Museum of Art","provider_type":"nonprofit","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"https://bocamuseum.org","registration_url":"https://bocamuseum.org","source_urls":"https://bocamuseum.org","contact_email":"not listed","contact_phone":"5613922500","address_line1":"501 Plaza Real","city":"Boca Raton","state":"FL","zip":"33432","geo_lat":"not listed","geo_lng":"not listed","age_min":"6","age_max":"14","grades":"not listed","camp_type":"art camp","format":"in_person","dates":"not listed","daily_hours":"09:00-15:00","days_of_week":"Mon,Tue,Wed,Thu,Fri","meals_included":"not listed","extended_care":"not listed","activities":"painting drawing sculpture art projects","required_gear":"art smock","refund_policy_summary":"not listed","sibling_policy_summary":"not listed","medical_forms_required":"not listed","special_needs_support_notes":"not listed","transportation":"not listed","safety_notes":"museum staff supervision","last_verified_date":"2026-03-16","data_quality_flags":"partial_data","status":"confirmed","categories":["Arts & Performance"]},{"id":"camp_002","camp_name":"Bricks Bots & Beakers Summer Camp","provider_name":"Bricks Bots & Beakers","provider_type":"private","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"https://app.mainstreetsites.com/dmn4453/","registration_url":"","source_urls":"https://bocamag.com/these-are-the-summer-camps-your-kids-actually-want-to-go-to-this-year/","contact_email":"","contact_phone":"561-235-0917","address_line1":"499 NE Spanish River Blvd #2","city":"Boca Raton","state":"FL","zip":"33431","geo_lat":"26.3960","geo_lng":"-80.0890","age_min":"4","age_max":"12","grades":"","camp_type":"stem","format":"day","dates":"Summer 2026","daily_hours":"8:30 AM\u20133:00 PM","days_of_week":"Mon\u2013Fri","meals_included":"no","extended_care":"unknown","activities":"STEAM experiments;engineering;robotics;simulations;collaborative games","required_gear":"Lunch, snacks, beverage","refund_policy_summary":"","sibling_policy_summary":"","medical_forms_required":"unknown","special_needs_support_notes":"","transportation":"not_provided","safety_notes":"","last_verified_date":"2026-03-22","data_quality_flags":"missing_dates","status":"confirmed","categories":["STEM & Technology"]},{"id":"camp_003","camp_name":"Camp Ladybug","provider_name":"Camp Ladybug","provider_type":"private","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"https://campladybug.com","registration_url":"https://campladybug.com","source_urls":"https://campladybug.com","contact_email":"info@campladybug.com","contact_phone":"7542445596","address_line1":"7700 Camino Real Unit 100","city":"Boca Raton","state":"FL","zip":"33433","geo_lat":"not listed","geo_lng":"not listed","age_min":"5","age_max":"12","grades":"K-6","camp_type":"traditional day camp","format":"in_person","dates":"June 8 \u2013 July 31 2026","daily_hours":"09:00-15:00","days_of_week":"Mon,Tue,Wed,Thu,Fri","meals_included":"not listed","extended_care":"before_after","activities":"arts crafts sports yoga dance karate stem games","required_gear":"group activity supplies","refund_policy_summary":"not listed","sibling_policy_summary":"10 percent sibling discount","medical_forms_required":"not listed","special_needs_support_notes":"not listed","transportation":"not listed","safety_notes":"staff supervision","last_verified_date":"2026-03-16","data_quality_flags":"verified_source","status":"confirmed","categories":["Day Camp"]},{"id":"camp_004","camp_name":"City of Boca Raton Summer Camps","provider_name":"City of Boca Raton","provider_type":"city","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"https://www.myboca.us/2912/2026-Summer-Camps","registration_url":"https://www.myboca.us/2912/2026-Summer-Camps","source_urls":"https://www.myboca.us/2912/2026-Summer-Camps","contact_email":"","contact_phone":"561-393-7995","address_line1":"Various city facilities","city":"Boca Raton","state":"FL","zip":"33432","geo_lat":"26.3587","geo_lng":"-80.0831","age_min":"4","age_max":"16","grades":"","camp_type":"day_camp;enrichment;sports;arts;stem","format":"day","dates":"June 1\u2013August 7, 2026","daily_hours":"Half-day and full-day options","days_of_week":"Mon\u2013Fri","meals_included":"no","extended_care":"pm","activities":"surf;theater;science;STEM;sports;art;rock music;lifeguard training","required_gear":"","refund_policy_summary":"","sibling_policy_summary":"","medical_forms_required":"yes","special_needs_support_notes":"","transportation":"not_provided","safety_notes":"","last_verified_date":"2026-03-22","data_quality_flags":"missing_price","status":"confirmed","categories":["Arts & Performance","Day Camp","STEM & Technology","Sports"]},{"id":"camp_005","camp_name":"FunCamps at FAU","provider_name":"FunCamps","provider_type":"private","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"https://www.funcamps.com/boca-raton-fau.html","registration_url":"https://www.funcamps.com/boca-raton-fau.html","source_urls":"https://www.funcamps.com/boca-raton-fau.html","contact_email":"david@funcamps.com","contact_phone":"305-666-2992","address_line1":"Florida Atlantic University","city":"Boca Raton","state":"FL","zip":"33431","geo_lat":"26.3710","geo_lng":"-80.1020","age_min":"5","age_max":"12","grades":"","camp_type":"enrichment;stem;arts","format":"day","dates":"Summer 2026","daily_hours":"9:00 AM\u20133:00 PM","days_of_week":"Mon\u2013Fri","meals_included":"no","extended_care":"unknown","activities":"magic;science;space;dinosaurs;fine art;various mediums","required_gear":"","refund_policy_summary":"","sibling_policy_summary":"","medical_forms_required":"unknown","special_needs_support_notes":"","transportation":"not_provided","safety_notes":"37 years of operation","last_verified_date":"2026-03-22","data_quality_flags":"missing_price;missing_dates","status":"confirmed","categories":["Arts & Performance","Day Camp","STEM & Technology"]},{"id":"camp_006","camp_name":"Levis JCC Marleen Forkas Camp","provider_name":"Adolph & Rose Levis JCC","provider_type":"nonprofit","religious_affiliation":"yes","denomination_or_affiliation":"Jewish","website_url":"https://levisjcc.org/camp/","registration_url":"https://levisjcc.org/camp/","source_urls":"https://levisjcc.org/camp/","contact_email":"camp@levisjcc.org","contact_phone":"561-852-5090","address_line1":"21050 95th Ave S","city":"Boca Raton","state":"FL","zip":"33428","geo_lat":"26.3350","geo_lng":"-80.2170","age_min":"2","age_max":"16","grades":"K\u20139","camp_type":"day_camp;sports;arts;theater;swim","format":"day","dates":"June 8\u2013July 31, 2026","daily_hours":"9:00 AM\u20134:00 PM","days_of_week":"Mon\u2013Fri","meals_included":"unknown","extended_care":"both","activities":"go karts;science;magic;trapeze;archery;swim;sports;art;theater","required_gear":"","refund_policy_summary":"Full refund minus $100 reg fee through Feb 28","sibling_policy_summary":"$100 off per session per sibling","medical_forms_required":"yes","special_needs_support_notes":"Camp Kavod for special needs (ages 3\u201322+)","transportation":"not_provided","safety_notes":"Gated 100-acre campus","last_verified_date":"2026-03-22","data_quality_flags":"","status":"confirmed","categories":["Arts & Performance","Day Camp","Sports"]},{"id":"camp_007","camp_name":"Pine Crest Summer Camp (Boca Raton)","provider_name":"Pine Crest School","provider_type":"private","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"https://info.pinecrest.edu/pine-crest-summer","registration_url":"https://info.pinecrest.edu/pine-crest-summer","source_urls":"https://info.pinecrest.edu/pine-crest-summer","contact_email":"","contact_phone":"561-852-2800","address_line1":"2700 St Andrews Blvd","city":"Boca Raton","state":"FL","zip":"33434","geo_lat":"26.3580","geo_lng":"-80.1620","age_min":"4","age_max":"14","grades":"Pre-K\u20138","camp_type":"day_camp;enrichment;sports;arts;stem","format":"day","dates":"June 8\u2013August 7, 2026 (9 weekly sessions)","daily_hours":"9:30 AM\u20133:30 PM","days_of_week":"Mon\u2013Fri","meals_included":"yes","extended_care":"both","activities":"swimming;sports;art;science;outdoor;enrichment","required_gear":"","refund_policy_summary":"","sibling_policy_summary":"","medical_forms_required":"yes","special_needs_support_notes":"","transportation":"not_provided","safety_notes":"Open to Pine Crest community","last_verified_date":"2026-03-22","data_quality_flags":"missing_price","status":"confirmed","categories":["Arts & Performance","Day Camp","STEM & Technology","Sports"]},{"id":"camp_008","camp_name":"Pine Tree Camps at Lynn University","provider_name":"Lynn University","provider_type":"university","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"https://www.pinetreecamp.com/","registration_url":"https://www.pinetreecamp.com/","source_urls":"https://www.pinetreecamp.com/","contact_email":"","contact_phone":"","address_line1":"3601 N Military Trail","city":"Boca Raton","state":"FL","zip":"33431","geo_lat":"26.3870","geo_lng":"-80.1050","age_min":"5","age_max":"14","grades":"","camp_type":"day_camp;overnight","format":"hybrid","dates":"Summer 2026 (three 3-week sessions)","daily_hours":"Full day","days_of_week":"Mon\u2013Fri","meals_included":"yes","extended_care":"unknown","activities":"swimming;sports;arts;adventures;traditional camp","required_gear":"","refund_policy_summary":"","sibling_policy_summary":"","medical_forms_required":"yes","special_needs_support_notes":"","transportation":"unknown","safety_notes":"ACA accredited; on Lynn University campus","last_verified_date":"2026-03-22","data_quality_flags":"missing_price;missing_contact","status":"confirmed","categories":["Day Camp"]},{"id":"camp_009","camp_name":"Saint Andrews Day Camp","provider_name":"Saint Andrews School","provider_type":"private school","religious_affiliation":"yes","denomination_or_affiliation":"","website_url":"https://camp.saintandrews.net/day-camp","registration_url":"https://camp.saintandrews.net/day-camp","source_urls":"https://camp.saintandrews.net/day-camp","contact_email":"not listed","contact_phone":"5612102100","address_line1":"3900 Jog Rd","city":"Boca Raton","state":"FL","zip":"33434","geo_lat":"not listed","geo_lng":"not listed","age_min":"3","age_max":"12","grades":"not listed","camp_type":"traditional day camp","format":"in_person","dates":"not listed","daily_hours":"not listed","days_of_week":"Mon,Tue,Wed,Thu,Fri","meals_included":"yes","extended_care":"not listed","activities":"sports robotics science swimming yoga","required_gear":"swimsuit towel","refund_policy_summary":"not listed","sibling_policy_summary":"not listed","medical_forms_required":"not listed","special_needs_support_notes":"not listed","transportation":"not listed","safety_notes":"staff supervision","last_verified_date":"2026-03-16","data_quality_flags":"verified_source","status":"confirmed","categories":["Day Camp"]},{"id":"camp_010","camp_name":"Camp Twisters (American Twisters)","provider_name":"American Twisters Gymnastics","provider_type":"private","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"https://americantwisters.com/camps/","registration_url":"https://americantwisters.com/camps/","source_urls":"https://americantwisters.com/camps/","contact_email":"","contact_phone":"954-725-9199","address_line1":"4747 Coconut Creek Pkwy","city":"Coconut Creek","state":"FL","zip":"33063","geo_lat":"26.2780","geo_lng":"-80.1790","age_min":"5","age_max":"12","grades":"","camp_type":"gymnastics;sports","format":"day","dates":"Summer 2026","daily_hours":"Full day","days_of_week":"Mon\u2013Fri","meals_included":"no","extended_care":"unknown","activities":"gymnastics;games;fitness;arts;crafts;supervised play","required_gear":"","refund_policy_summary":"","sibling_policy_summary":"","medical_forms_required":"unknown","special_needs_support_notes":"","transportation":"not_provided","safety_notes":"Indoor air-conditioned facility; safety-certified staff","last_verified_date":"2026-03-22","data_quality_flags":"missing_price;missing_dates","status":"confirmed","categories":["Sports"]},{"id":"camp_011","camp_name":"Coconut Creek City Summer Camp","provider_name":"City of Coconut Creek","provider_type":"city","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"https://www.coconutcreek.gov/government/city-directory/parks-and-recreation/summer-camp","registration_url":"https://www.coconutcreek.gov/government/city-directory/parks-and-recreation/summer-camp","source_urls":"https://www.coconutcreek.gov/government/city-directory/parks-and-recreation/summer-camp","contact_email":"","contact_phone":"954-545-6670","address_line1":"Recreation Complex & Community Center","city":"Coconut Creek","state":"FL","zip":"33066","geo_lat":"26.2520","geo_lng":"-80.1850","age_min":"5","age_max":"13","grades":"","camp_type":"day_camp;enrichment","format":"day","dates":"Summer 2026 (8 weeks)","daily_hours":"Full day","days_of_week":"Mon\u2013Fri","meals_included":"no","extended_care":"unknown","activities":"field trips;games;sports;arts;crafts","required_gear":"Camp shirt","refund_policy_summary":"","sibling_policy_summary":"","medical_forms_required":"yes","special_needs_support_notes":"","transportation":"not_provided","safety_notes":"","last_verified_date":"2026-03-22","data_quality_flags":"","status":"confirmed","categories":["Day Camp"]},{"id":"camp_012","camp_name":"Dance Theatre Summer Camp \u2013 Parkland","provider_name":"Dance Theatre","provider_type":"private_studio","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"https://www.dancetheatre.net","registration_url":"not listed","source_urls":"https://www.dancetheatre.net","contact_email":"info@dancetheatre.net","contact_phone":"9544277217","address_line1":"6546 N State Road 7","city":"Coconut Creek","state":"FL","zip":"33073","geo_lat":"not listed","geo_lng":"not listed","age_min":"4","age_max":"18","grades":"not listed","camp_type":"dance performing_arts","format":"in_person","dates":"not listed","daily_hours":"not listed","days_of_week":"Mon,Tue,Wed,Thu,Fri","meals_included":"no","extended_care":"not listed","activities":"ballet jazz hip hop tap acro choreography","required_gear":"dance clothing dance shoes","refund_policy_summary":"not listed","sibling_policy_summary":"not listed","medical_forms_required":"not listed","special_needs_support_notes":"not listed","transportation":"not listed","safety_notes":"professional instructors studio supervision","last_verified_date":"2026-03-16","data_quality_flags":"verified_source","status":"confirmed","categories":["Arts & Performance"]},{"id":"camp_013","camp_name":"Eagles Landing Camp","provider_name":"Eagles Landing Camps","provider_type":"private","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"https://www.kidsloveelc.com/","registration_url":"https://www.kidsloveelc.com/","source_urls":"https://www.kidsloveelc.com/","contact_email":"info@kidsloveelc.com","contact_phone":"954-571-8709","address_line1":"7600 Lyons Rd","city":"Coconut Creek","state":"FL","zip":"33073","geo_lat":"26.3100","geo_lng":"-80.2540","age_min":"3","age_max":"14","grades":"","camp_type":"day_camp;sports;arts;swim","format":"hybrid","dates":"Summer 2026 (8 weeks)","daily_hours":"Full day","days_of_week":"Mon\u2013Fri","meals_included":"yes","extended_care":"both","activities":"sports;swimming;boating;arts;tennis;archery;color war","required_gear":"","refund_policy_summary":"","sibling_policy_summary":"","medical_forms_required":"yes","special_needs_support_notes":"","transportation":"provided","safety_notes":"100% nut-free; 82-acre campus on North Broward Prep","last_verified_date":"2026-03-22","data_quality_flags":"missing_price","status":"confirmed","categories":["Arts & Performance","Day Camp","Sports"]},{"id":"camp_014","camp_name":"Fitwize 4 Kids Summer Camp","provider_name":"Fitwize 4 Kids","provider_type":"nonprofit","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"https://fitwize4kids.org/camps/","registration_url":"https://fitwize4kids.org/camps/","source_urls":"https://fitwize4kids.org/camps/","contact_email":"","contact_phone":"","address_line1":"4641 N State Rd 7 Unit 15B","city":"Coconut Creek","state":"FL","zip":"33073","geo_lat":"26.2810","geo_lng":"-80.2070","age_min":"5","age_max":"13","grades":"","camp_type":"sports;enrichment;day_camp","format":"day","dates":"Summer 2026","daily_hours":"9:00 AM\u20136:00 PM","days_of_week":"Mon\u2013Fri","meals_included":"no","extended_care":"unknown","activities":"fitness;sports;cooking;team building;games","required_gear":"","refund_policy_summary":"","sibling_policy_summary":"","medical_forms_required":"unknown","special_needs_support_notes":"","transportation":"not_provided","safety_notes":"","last_verified_date":"2026-03-22","data_quality_flags":"missing_price;missing_dates;missing_contact","status":"flagged_pending","categories":["Day Camp","Sports"]},{"id":"camp_015","camp_name":"Park's Tae Kwon Do Summer Camp","provider_name":"Park's Tae Kwon Do","provider_type":"private","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"https://parksfederation.com/kids-activities/summer-camp-coconut-creek/","registration_url":"https://parksfederation.com/kids-activities/summer-camp-coconut-creek/","source_urls":"https://parksfederation.com/kids-activities/summer-camp-coconut-creek/","contact_email":"","contact_phone":"","address_line1":"Coconut Creek","city":"Coconut Creek","state":"FL","zip":"33073","geo_lat":"26.2810","geo_lng":"-80.2070","age_min":"5","age_max":"12","grades":"","camp_type":"martial_arts;sports","format":"day","dates":"Summer 2026","daily_hours":"Full day","days_of_week":"Mon\u2013Fri","meals_included":"unknown","extended_care":"unknown","activities":"martial arts;self defense;discipline;fitness;games","required_gear":"Comfortable clothes; water bottle","refund_policy_summary":"","sibling_policy_summary":"","medical_forms_required":"unknown","special_needs_support_notes":"","transportation":"not_provided","safety_notes":"","last_verified_date":"2026-03-22","data_quality_flags":"missing_price;missing_dates;missing_contact;ambiguous_location","status":"flagged_pending","categories":["Arts & Performance","Sports"]},{"id":"camp_016","camp_name":"Providence Children's Academy Camp","provider_name":"Providence Children's Academy","provider_type":"private","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"https://www.providencechildrensacademy.com/summer-camp/","registration_url":"https://www.providencechildrensacademy.com/summer-camp/","source_urls":"https://www.providencechildrensacademy.com/summer-camp/","contact_email":"","contact_phone":"954-570-6914","address_line1":"Coconut Creek","city":"Coconut Creek","state":"FL","zip":"33073","geo_lat":"26.2810","geo_lng":"-80.2070","age_min":"5","age_max":"12","grades":"","camp_type":"day_camp;enrichment;sports","format":"day","dates":"Summer 2026","daily_hours":"Full day","days_of_week":"Mon\u2013Fri","meals_included":"unknown","extended_care":"unknown","activities":"field trips;sports;swimming;arts;smart boards;science;nature","required_gear":"Camp shirt","refund_policy_summary":"","sibling_policy_summary":"","medical_forms_required":"unknown","special_needs_support_notes":"","transportation":"not_provided","safety_notes":"","last_verified_date":"2026-03-22","data_quality_flags":"missing_price;missing_dates;ambiguous_location","status":"flagged_pending","categories":["Day Camp","Sports"]},{"id":"camp_017","camp_name":"All Sports and Games Camp","provider_name":"Coral Springs Soccer Club","provider_type":"sports_organization","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"https://www.coralspringssoccer.com","registration_url":"https://www.coralspringssoccer.com","source_urls":"https://www.coralspringssoccer.com","contact_email":"Not Listed","contact_phone":"9543414253","address_line1":"2575 Sportsplex Dr","city":"Coral Springs","state":"FL","zip":"33065","geo_lat":"Not Listed","geo_lng":"Not Listed","age_min":"5","age_max":"10","grades":"Not Listed","camp_type":"sports,multi_sport","format":"day","dates":"summer weekly sessions","daily_hours":"09:00-15:00","days_of_week":"Mon,Tue,Wed,Thu,Fri","meals_included":"no","extended_care":"none","activities":"soccer basketball dodgeball team games sports conditioning","required_gear":"athletic shoes water bottle sunscreen","refund_policy_summary":"Not Listed","sibling_policy_summary":"Not Listed","medical_forms_required":"no","special_needs_support_notes":"Not Listed","transportation":"not_provided","safety_notes":"Coach supervised sports activities","last_verified_date":"2026-03-16","data_quality_flags":"missing_price","status":"confirmed","categories":["Sports"]},{"id":"camp_018","camp_name":"America's Leaders Cheer and Dance Camp","provider_name":"America's Leaders","provider_type":"private","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"https://americasleaders.co/summer-camp-information-cheerleading-dance-manners-and-more/","registration_url":"https://americasleaders.co/summer-camp-information-cheerleading-dance-manners-and-more/","source_urls":"https://americasleaders.co/summer-camp-information-cheerleading-dance-manners-and-more/","contact_email":"not listed","contact_phone":"9547485977","address_line1":"3205 N University Dr","city":"Coral Springs","state":"FL","zip":"33065","geo_lat":"not listed","geo_lng":"not listed","age_min":"5","age_max":"12","grades":"not listed","camp_type":"dance cheer","format":"in_person","dates":"June 8\u2013July 24, 2026 (7 weeks)","daily_hours":"9:00 AM\u20134:00 PM","days_of_week":"Mon,Tue,Wed,Thu,Fri","meals_included":"no","extended_care":"both","activities":"cheerleading dance etiquette activities","required_gear":"comfortable clothing sneakers","refund_policy_summary":"not listed","sibling_policy_summary":"not listed","medical_forms_required":"not listed","special_needs_support_notes":"not listed","transportation":"not listed","safety_notes":"staff supervision","last_verified_date":"2026-03-22","data_quality_flags":"verified_source","status":"confirmed","categories":["Arts & Performance"]},{"id":"camp_019","camp_name":"ArtNest Summer Art Camp","provider_name":"ArtNest Studios Coral Springs","provider_type":"private","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"https://artneststudios.com","registration_url":"https://coralsprings.artneststudios.com/camps","source_urls":"https://coralsprings.artneststudios.com/camps","contact_email":"not listed","contact_phone":"9546886127","address_line1":"8218 Wiles Rd","city":"Coral Springs","state":"FL","zip":"33067","geo_lat":"not listed","geo_lng":"not listed","age_min":"3","age_max":"13","grades":"not listed","camp_type":"art camp","format":"in_person","dates":"not listed","daily_hours":"09:00-15:00","days_of_week":"Mon,Tue,Wed,Thu,Fri","meals_included":"not listed","extended_care":"not listed","activities":"painting drawing clay mixed media projects","required_gear":"art smock","refund_policy_summary":"not listed","sibling_policy_summary":"not listed","medical_forms_required":"not listed","special_needs_support_notes":"not listed","transportation":"not listed","safety_notes":"instructor supervision","last_verified_date":"2026-03-16","data_quality_flags":"verified_source","status":"confirmed","categories":["Arts & Performance"]},{"id":"camp_020","camp_name":"Broward Tennis Academy Camp","provider_name":"Broward Tennis Academy","provider_type":"sports","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"https://www.coralsprings.gov","registration_url":"not listed","source_urls":"https://www.coralsprings.gov/Parks-Directory/Tennis-Center","contact_email":"not listed","contact_phone":"not listed","address_line1":"2575 Sportsplex Dr","city":"Coral Springs","state":"FL","zip":"33065","geo_lat":"not listed","geo_lng":"not listed","age_min":"5","age_max":"16","grades":"not listed","camp_type":"tennis camp","format":"in_person","dates":"not listed","daily_hours":"not listed","days_of_week":"not listed","meals_included":"not listed","extended_care":"not listed","activities":"tennis drills conditioning match play","required_gear":"tennis racket","refund_policy_summary":"not listed","sibling_policy_summary":"not listed","medical_forms_required":"not listed","special_needs_support_notes":"not listed","transportation":"not listed","safety_notes":"coach supervision","last_verified_date":"2026-03-16","data_quality_flags":"partial_data","status":"confirmed","categories":["Sports"]},{"id":"camp_021","camp_name":"Camp Wild","provider_name":"Sawgrass Nature Center and Wildlife Hospital","provider_type":"nonprofit","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"https://sawgrassnaturecenter.org/camps","registration_url":"https://sawgrassnaturecenter.org/camps","source_urls":"https://sawgrassnaturecenter.org/camps","contact_email":"info@sawgrassnaturecenter.org","contact_phone":"9547529453","address_line1":"3000 Sportsplex Dr","city":"Coral Springs","state":"FL","zip":"33065","geo_lat":"Not Listed","geo_lng":"Not Listed","age_min":"6","age_max":"12","grades":"Not Listed","camp_type":"nature,outdoor,animals,education","format":"day","dates":"June 8\u2013August 7, 2026 (9 weeks)","daily_hours":"09:00-15:00","days_of_week":"Mon,Tue,Wed,Thu,Fri","meals_included":"no","extended_care":"none","activities":"animal encounters nature hikes environmental education crafts","required_gear":"closed toe shoes sunscreen water bottle","refund_policy_summary":"Not Listed","sibling_policy_summary":"Not Listed","medical_forms_required":"no","special_needs_support_notes":"Not Listed","transportation":"not_provided","safety_notes":"Staff supervised wildlife learning environment","last_verified_date":"2026-03-22","data_quality_flags":"missing_price","status":"confirmed","categories":["Academics","Nature & Outdoor"]},{"id":"camp_022","camp_name":"Code Ninjas Coding Camp","provider_name":"Code Ninjas","provider_type":"private","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"https://www.codeninjas.com/fl-coral-springs/camps","registration_url":"https://www.codeninjas.com/fl-coral-springs/camps","source_urls":"https://www.codeninjas.com/fl-coral-springs/camps","contact_email":"coralspringsfl@codeninjas.com","contact_phone":"9545074383","address_line1":"6290 W Sample Rd","city":"Coral Springs","state":"FL","zip":"33067","geo_lat":"Not Listed","geo_lng":"Not Listed","age_min":"5","age_max":"14","grades":"Not Listed","camp_type":"stem,coding,technology","format":"day","dates":"weekly sessions June-August","daily_hours":"AM: 9AM-12PM; PM: 12:30-3:30PM","days_of_week":"Mon,Tue,Wed,Thu,Fri","meals_included":"no","extended_care":"none","activities":"coding robotics game design problem solving","required_gear":"laptop water bottle","refund_policy_summary":"Not Listed","sibling_policy_summary":"Not Listed","medical_forms_required":"no","special_needs_support_notes":"Not Listed","transportation":"not_provided","safety_notes":"Instructor supervised STEM camp","last_verified_date":"2026-03-22","data_quality_flags":"missing_price","status":"confirmed","categories":["STEM & Technology"]},{"id":"camp_023","camp_name":"Coral Springs Museum Art Camp","provider_name":"Coral Springs Museum of Art","provider_type":"nonprofit","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"https://coralspringsmuseum.org/camp-catalog-youth-teen-summer-2026/","registration_url":"https://coralspringsmuseum.org/camp-catalog-youth-teen-summer-2026/","source_urls":"https://coralspringsmuseum.org/camp-catalog-youth-teen-summer-2026/","contact_email":"info@coralspringsmuseum.org","contact_phone":"9543405000","address_line1":"2855 Coral Springs Dr","city":"Coral Springs","state":"FL","zip":"33065","geo_lat":"Not Listed","geo_lng":"Not Listed","age_min":"6","age_max":"12","grades":"Not Listed","camp_type":"arts","format":"day","dates":"weekly sessions June-August","daily_hours":"09:00-15:00","days_of_week":"Mon,Tue,Wed,Thu,Fri","meals_included":"no","extended_care":"none","activities":"painting sculpture drawing mixed media art projects","required_gear":"art smock water bottle","refund_policy_summary":"Not Listed","sibling_policy_summary":"Not Listed","medical_forms_required":"no","special_needs_support_notes":"Not Listed","transportation":"not_provided","safety_notes":"Staff supervised studio instruction","last_verified_date":"2026-03-16 00:00:00","data_quality_flags":"missing_price","status":"confirmed","categories":["Arts & Performance"]},{"id":"camp_024","camp_name":"Coral Springs Museum of Art Summer Camp","provider_name":"Coral Springs Museum of Art","provider_type":"museum","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"https://coralspringsmuseum.org/camp-catalog-youth-teen-summer-2026/","registration_url":"https://coralspringsmuseum.org/camp-catalog-youth-teen-summer-2026/","source_urls":"https://coralspringsmuseum.org/camp-catalog-youth-teen-summer-2026/","contact_email":"not listed","contact_phone":"9543405000","address_line1":"2855 Coral Springs Dr","city":"Coral Springs","state":"FL","zip":"33065","geo_lat":"not listed","geo_lng":"not listed","age_min":"5","age_max":"12","grades":"not listed","camp_type":"arts","format":"in_person","dates":"June 8 \u2013 July 31","daily_hours":"not listed","days_of_week":"Mon,Tue,Wed,Thu,Fri","meals_included":"not listed","extended_care":"not listed","activities":"painting drawing sculpture art themes","required_gear":"art smock","refund_policy_summary":"not listed","sibling_policy_summary":"not listed","medical_forms_required":"not listed","special_needs_support_notes":"not listed","transportation":"not listed","safety_notes":"museum staff supervision","last_verified_date":"2026-03-16","data_quality_flags":"verified_source","status":"confirmed","categories":["Arts & Performance"]},{"id":"camp_025","camp_name":"Coral Springs Tennis Summer Camp","provider_name":"City of Coral Springs","provider_type":"city","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"https://www.coralsprings.gov/Government/Departments/Parks-and-Recreation/Classes-and-Programs/Camps/Tennis-Summer-Camp","registration_url":"https://recreation.coralsprings.org/","source_urls":"https://www.coralsprings.gov/Government/Departments/Parks-and-Recreation/Classes-and-Programs/Camps/Tennis-Summer-Camp","contact_email":"","contact_phone":"","address_line1":"Coral Springs Tennis Center","city":"Coral Springs","state":"FL","zip":"33065","geo_lat":"26.2710","geo_lng":"-80.2710","age_min":"5","age_max":"16","grades":"","camp_type":"sports","format":"day","dates":"Summer 2026","daily_hours":"Half-day","days_of_week":"Mon\u2013Fri","meals_included":"no","extended_care":"none","activities":"tennis instruction;games;rules;competition","required_gear":"Drinks and snacks","refund_policy_summary":"","sibling_policy_summary":"","medical_forms_required":"unknown","special_needs_support_notes":"","transportation":"not_provided","safety_notes":"Grouped by age and ability","last_verified_date":"2026-03-22","data_quality_flags":"missing_price;missing_dates;missing_contact","status":"confirmed","categories":["Sports"]},{"id":"camp_026","camp_name":"Creative Theater Camp","provider_name":"Childrens Theater Workshop","provider_type":"arts","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"not listed","registration_url":"not listed","source_urls":"not listed","contact_email":"not listed","contact_phone":"not listed","address_line1":"not listed","city":"Coral Springs","state":"FL","zip":"33065","geo_lat":"not listed","geo_lng":"not listed","age_min":"not listed","age_max":"not listed","grades":"not listed","camp_type":"theater arts","format":"in_person","dates":"not listed","daily_hours":"not listed","days_of_week":"not listed","meals_included":"not listed","extended_care":"not listed","activities":"acting improv stage production","required_gear":"comfortable clothing","refund_policy_summary":"not listed","sibling_policy_summary":"not listed","medical_forms_required":"not listed","special_needs_support_notes":"not listed","transportation":"not listed","safety_notes":"staff supervision","last_verified_date":"2026-03-16","data_quality_flags":"limited_data","status":"confirmed","categories":["Arts & Performance"]},{"id":"camp_027","camp_name":"Dance Theatre Summer Camp \u2013 Heron Bay","provider_name":"Dance Theatre","provider_type":"private_studio","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"https://www.dancetheatre.net","registration_url":"not listed","source_urls":"https://www.dancetheatre.net/heronbay/contactus","contact_email":"info@dancetheatre.net","contact_phone":"9543401544","address_line1":"5952 Coral Ridge Drive","city":"Coral Springs","state":"FL","zip":"33076","geo_lat":"not listed","geo_lng":"not listed","age_min":"4","age_max":"18","grades":"not listed","camp_type":"dance performing_arts","format":"in_person","dates":"not listed","daily_hours":"not listed","days_of_week":"Mon,Tue,Wed,Thu,Fri","meals_included":"no","extended_care":"not listed","activities":"ballet jazz hip hop tap acro choreography","required_gear":"dance clothing dance shoes","refund_policy_summary":"not listed","sibling_policy_summary":"not listed","medical_forms_required":"not listed","special_needs_support_notes":"not listed","transportation":"not listed","safety_notes":"professional instructors studio supervision","last_verified_date":"2026-03-16","data_quality_flags":"verified_source","status":"confirmed","categories":["Arts & Performance"]},{"id":"camp_028","camp_name":"Junior Golf Camp","provider_name":"Eagle Trace Golf Club","provider_type":"sports","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"not listed","registration_url":"not listed","source_urls":"not listed","contact_email":"not listed","contact_phone":"not listed","address_line1":"1111 Eagle Trace Blvd","city":"Coral Springs","state":"FL","zip":"33071","geo_lat":"not listed","geo_lng":"not listed","age_min":"not listed","age_max":"not listed","grades":"not listed","camp_type":"golf camp","format":"in_person","dates":"not listed","daily_hours":"not listed","days_of_week":"not listed","meals_included":"not listed","extended_care":"not listed","activities":"golf instruction driving range practice","required_gear":"golf clubs","refund_policy_summary":"not listed","sibling_policy_summary":"not listed","medical_forms_required":"not listed","special_needs_support_notes":"not listed","transportation":"not listed","safety_notes":"pro instructor supervision","last_verified_date":"2026-03-16","data_quality_flags":"limited_data","status":"confirmed","categories":["Sports"]},{"id":"camp_029","camp_name":"Kamp Kool","provider_name":"City of Coral Springs","provider_type":"city","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"https://www.coralsprings.gov/Government/Departments/Parks-and-Recreation/Classes-and-Programs/Camps/Kamp-Kool","registration_url":"https://www.coralsprings.gov/Government/Departments/Parks-and-Recreation/Classes-and-Programs/Camps/Kamp-Kool","source_urls":"https://www.coralsprings.gov/Government/Departments/Parks-and-Recreation/Classes-and-Programs/Camps/Kamp-Kool","contact_email":"parks@coralsprings.gov","contact_phone":"9543452200","address_line1":"2501 Coral Springs Dr","city":"Coral Springs","state":"FL","zip":"33065","geo_lat":"Not Listed","geo_lng":"Not Listed","age_min":"6","age_max":"14","grades":"2026-01-08 00:00:00","camp_type":"day_camp,outdoor,sports,arts","format":"day","dates":"2026-06-15 to 2026-07-24; extension 2026-07-27 to 2026-07-31","daily_hours":"07:30-18:00","days_of_week":"Mon,Tue,Wed,Thu,Fri","meals_included":"no","extended_care":"both","activities":"sports swimming arts crafts field trips games color wars","required_gear":"swimsuit towel sunscreen","refund_policy_summary":"City refund policy applies","sibling_policy_summary":"Not Listed","medical_forms_required":"yes","special_needs_support_notes":"Special populations camp available","transportation":"not_provided","safety_notes":"City supervised program","last_verified_date":"2026-03-16 00:00:00","data_quality_flags":"none","status":"confirmed","categories":["Arts & Performance","Day Camp","Nature & Outdoor","Sports"]},{"id":"camp_030","camp_name":"Kids Coding Bootcamp","provider_name":"Tech Kids Academy","provider_type":"education","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"not listed","registration_url":"not listed","source_urls":"not listed","contact_email":"not listed","contact_phone":"not listed","address_line1":"not listed","city":"Coral Springs","state":"FL","zip":"33065","geo_lat":"not listed","geo_lng":"not listed","age_min":"not listed","age_max":"not listed","grades":"not listed","camp_type":"stem coding","format":"in_person","dates":"not listed","daily_hours":"not listed","days_of_week":"not listed","meals_included":"not listed","extended_care":"not listed","activities":"coding robotics programming","required_gear":"laptop","refund_policy_summary":"not listed","sibling_policy_summary":"not listed","medical_forms_required":"not listed","special_needs_support_notes":"not listed","transportation":"not listed","safety_notes":"instructor supervision","last_verified_date":"2026-03-16","data_quality_flags":"limited_data","status":"confirmed","categories":["STEM & Technology"]},{"id":"camp_031","camp_name":"Kind Academy Summer Camp","provider_name":"Kind Academy","provider_type":"private","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"https://www.kindacademy.org/coral-springs-summer-camp","registration_url":"https://www.kindacademy.org/coral-springs-summer-camp","source_urls":"https://www.kindacademy.org/coral-springs-summer-camp","contact_email":"","contact_phone":"","address_line1":"Coral Springs","city":"Coral Springs","state":"FL","zip":"33065","geo_lat":"26.2710","geo_lng":"-80.2710","age_min":"5","age_max":"11","grades":"","camp_type":"enrichment;arts;stem","format":"day","dates":"Summer 2026","daily_hours":"Full day and part-time options","days_of_week":"Mon\u2013Fri","meals_included":"unknown","extended_care":"unknown","activities":"STEAM;art;pottery;field trips","required_gear":"","refund_policy_summary":"","sibling_policy_summary":"","medical_forms_required":"unknown","special_needs_support_notes":"","transportation":"not_provided","safety_notes":"","last_verified_date":"2026-03-22","data_quality_flags":"missing_price;missing_dates;missing_contact;ambiguous_location","status":"flagged_pending","categories":["Arts & Performance","Day Camp","STEM & Technology"]},{"id":"camp_032","camp_name":"MusicMakers Camp","provider_name":"MusicMakers","provider_type":"private","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"Not Listed","registration_url":"Not Listed","source_urls":"Not Listed","contact_email":"Not Listed","contact_phone":"Not Listed","address_line1":"Not Listed","city":"Coral Springs","state":"FL","zip":"33065","geo_lat":"Not Listed","geo_lng":"Not Listed","age_min":"6","age_max":"14","grades":"Not Listed","camp_type":"music,arts,performance","format":"day","dates":"summer weekly sessions","daily_hours":"09:00-15:00","days_of_week":"Mon,Tue,Wed,Thu,Fri","meals_included":"no","extended_care":"none","activities":"instrument lessons group performance music theory games","required_gear":"instrument if owned water bottle","refund_policy_summary":"Not Listed","sibling_policy_summary":"Not Listed","medical_forms_required":"no","special_needs_support_notes":"Not Listed","transportation":"not_provided","safety_notes":"Instructor supervised music classes","last_verified_date":"2026-03-16 00:00:00","data_quality_flags":"missing_contact,missing_price","status":"confirmed","categories":["Arts & Performance"]},{"id":"camp_033","camp_name":"Next Stop Broadway Camp","provider_name":"Coral Springs Center for the Arts","provider_type":"nonprofit","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"https://www.thecentercs.com","registration_url":"https://www.thecentercs.com","source_urls":"https://www.thecentercs.com","contact_email":"Not Listed","contact_phone":"9543445990","address_line1":"2855 Coral Springs Dr","city":"Coral Springs","state":"FL","zip":"33065","geo_lat":"Not Listed","geo_lng":"Not Listed","age_min":"7","age_max":"17","grades":"Not Listed","camp_type":"theater,arts,performance","format":"day","dates":"summer session programs","daily_hours":"09:00-16:00","days_of_week":"Mon,Tue,Wed,Thu,Fri","meals_included":"no","extended_care":"none","activities":"acting singing dancing stage production rehearsal","required_gear":"dance shoes water bottle","refund_policy_summary":"Not Listed","sibling_policy_summary":"Not Listed","medical_forms_required":"no","special_needs_support_notes":"Not Listed","transportation":"not_provided","safety_notes":"Professional theater instructors","last_verified_date":"2026-03-16 00:00:00","data_quality_flags":"missing_price","status":"confirmed","categories":["Arts & Performance"]},{"id":"camp_034","camp_name":"Panthers IceDen Camp","provider_name":"Florida Panthers IceDen","provider_type":"private","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"https://www.panthersiceden.com/summer-camps","registration_url":"https://www.panthersiceden.com/summer-camps","source_urls":"https://www.panthersiceden.com/summer-camps","contact_email":"Not Listed","contact_phone":"9543419956","address_line1":"3299 Sportsplex Dr","city":"Coral Springs","state":"FL","zip":"33065","geo_lat":"Not Listed","geo_lng":"Not Listed","age_min":"6","age_max":"14","grades":"Not Listed","camp_type":"sports,hockey,skating","format":"day","dates":"multiple sessions June-August","daily_hours":"09:00-16:00","days_of_week":"Mon,Tue,Wed,Thu,Fri","meals_included":"no","extended_care":"none","activities":"skating drills hockey instruction off ice training games","required_gear":"skates helmet gloves","refund_policy_summary":"Not Listed","sibling_policy_summary":"Not Listed","medical_forms_required":"no","special_needs_support_notes":"Not Listed","transportation":"not_provided","safety_notes":"Professional coaching staff supervision","last_verified_date":"2026-03-16 00:00:00","data_quality_flags":"missing_price","status":"confirmed","categories":["Sports"]},{"id":"camp_035","camp_name":"Reign Sports Camp","provider_name":"Reign Sports","provider_type":"sports_organization","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"Not Listed","registration_url":"Not Listed","source_urls":"Not Listed","contact_email":"Not Listed","contact_phone":"Not Listed","address_line1":"Not Listed","city":"Coral Springs","state":"FL","zip":"33065","geo_lat":"Not Listed","geo_lng":"Not Listed","age_min":"6","age_max":"13","grades":"Not Listed","camp_type":"multi_sport","format":"day","dates":"summer weekly sessions","daily_hours":"09:00-15:00","days_of_week":"Mon,Tue,Wed,Thu,Fri","meals_included":"no","extended_care":"none","activities":"basketball soccer dodgeball team sports fitness games","required_gear":"athletic shoes water bottle","refund_policy_summary":"Not Listed","sibling_policy_summary":"Not Listed","medical_forms_required":"no","special_needs_support_notes":"Not Listed","transportation":"not_provided","safety_notes":"Coach supervised sports activities","last_verified_date":"2026-03-16 00:00:00","data_quality_flags":"missing_contact,missing_price","status":"confirmed","categories":["Sports"]},{"id":"camp_036","camp_name":"STEM Explorers Camp","provider_name":"STEM Explorers","provider_type":"education","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"not listed","registration_url":"not listed","source_urls":"not listed","contact_email":"not listed","contact_phone":"not listed","address_line1":"not listed","city":"Coral Springs","state":"FL","zip":"33065","geo_lat":"not listed","geo_lng":"not listed","age_min":"not listed","age_max":"not listed","grades":"not listed","camp_type":"stem science","format":"in_person","dates":"not listed","daily_hours":"not listed","days_of_week":"not listed","meals_included":"not listed","extended_care":"not listed","activities":"science experiments engineering projects","required_gear":"not listed","refund_policy_summary":"not listed","sibling_policy_summary":"not listed","medical_forms_required":"not listed","special_needs_support_notes":"not listed","transportation":"not listed","safety_notes":"instructor supervision","last_verified_date":"2026-03-16","data_quality_flags":"limited_data","status":"confirmed","categories":["STEM & Technology"]},{"id":"camp_037","camp_name":"Simply Soccer Camp","provider_name":"Simply Soccer","provider_type":"private","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"https://simplysoccer.com","registration_url":"https://simplysoccer.com","source_urls":"https://simplysoccer.com","contact_email":"info@simplysoccer.com","contact_phone":"9547556778","address_line1":"10000 NW 29th St","city":"Coral Springs","state":"FL","zip":"33065","geo_lat":"Not Listed","geo_lng":"Not Listed","age_min":"5","age_max":"15","grades":"Not Listed","camp_type":"sports","format":"day","dates":"2026-06-08 to 2026-08-07 weekly sessions","daily_hours":"09:00-12:00","days_of_week":"Mon,Tue,Wed,Thu,Fri","meals_included":"no","extended_care":"none","activities":"soccer drills passing shooting scrimmages conditioning","required_gear":"soccer cleats shin guards water bottle","refund_policy_summary":"Not Listed","sibling_policy_summary":"Not Listed","medical_forms_required":"no","special_needs_support_notes":"Not Listed","transportation":"not_provided","safety_notes":"Coach supervised drills and games","last_verified_date":"2026-03-16 00:00:00","data_quality_flags":"missing_price","status":"confirmed","categories":["Sports"]},{"id":"camp_038","camp_name":"South Florida Gymnastics Camp","provider_name":"South Florida Gymnastics","provider_type":"sports","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"not listed","registration_url":"not listed","source_urls":"not listed","contact_email":"not listed","contact_phone":"not listed","address_line1":"not listed","city":"Coral Springs","state":"FL","zip":"33076","geo_lat":"not listed","geo_lng":"not listed","age_min":"not listed","age_max":"not listed","grades":"not listed","camp_type":"gymnastics camp","format":"in_person","dates":"not listed","daily_hours":"not listed","days_of_week":"not listed","meals_included":"not listed","extended_care":"not listed","activities":"gymnastics tumbling conditioning","required_gear":"not listed","refund_policy_summary":"not listed","sibling_policy_summary":"not listed","medical_forms_required":"not listed","special_needs_support_notes":"not listed","transportation":"not listed","safety_notes":"coach supervision","last_verified_date":"2026-03-16","data_quality_flags":"limited_data","status":"confirmed","categories":["Sports"]},{"id":"camp_039","camp_name":"Spitfire Farm Camp","provider_name":"Spitfire Farm","provider_type":"farm","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"https://spitfirefarm.com","registration_url":"https://spitfirefarm.com/camps","source_urls":"https://spitfirefarm.com/camps","contact_email":"not listed","contact_phone":"not listed","address_line1":"not listed","city":"Coral Springs","state":"FL","zip":"33067","geo_lat":"not listed","geo_lng":"not listed","age_min":"not listed","age_max":"not listed","grades":"not listed","camp_type":"farm outdoor camp","format":"in_person","dates":"not listed","daily_hours":"not listed","days_of_week":"not listed","meals_included":"not listed","extended_care":"not listed","activities":"horse riding arts crafts trail exploration","required_gear":"closed toe shoes","refund_policy_summary":"not listed","sibling_policy_summary":"not listed","medical_forms_required":"not listed","special_needs_support_notes":"not listed","transportation":"not listed","safety_notes":"staff supervision","last_verified_date":"2026-03-16","data_quality_flags":"partial_data","status":"confirmed","categories":["Nature & Outdoor"]},{"id":"camp_040","camp_name":"Triple Threat Basketball Camp","provider_name":"Triple Threat Basketball","provider_type":"sports_organization","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"https://triplethreatbasketballtraining.weebly.com","registration_url":"Not Listed","source_urls":"https://triplethreatbasketballtraining.weebly.com","contact_email":"Not Listed","contact_phone":"9543452200","address_line1":"2501 Coral Springs Dr","city":"Coral Springs","state":"FL","zip":"33065","geo_lat":"Not Listed","geo_lng":"Not Listed","age_min":"7","age_max":"14","grades":"Not Listed","camp_type":"basketball","format":"day","dates":"multiple sessions June-August","daily_hours":"09:00-15:00","days_of_week":"Mon,Tue,Wed,Thu,Fri","meals_included":"no","extended_care":"none","activities":"basketball drills shooting defense offense conditioning","required_gear":"basketball shoes water bottle","refund_policy_summary":"Not Listed","sibling_policy_summary":"Not Listed","medical_forms_required":"no","special_needs_support_notes":"Not Listed","transportation":"not_provided","safety_notes":"Coach supervised basketball training","last_verified_date":"2026-03-16 00:00:00","data_quality_flags":"missing_price","status":"confirmed","categories":["Sports"]},{"id":"camp_041","camp_name":"Wize Computing Academy Camp","provider_name":"Wize Computing Academy","provider_type":"private","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"https://www.wizeacademy.com/coral-springs-fl/","registration_url":"https://www.wizeacademy.com/summer/","source_urls":"https://www.wizeacademy.com/coral-springs-fl/","contact_email":"","contact_phone":"954-998-6510","address_line1":"8701 Wiles Rd","city":"Coral Springs","state":"FL","zip":"33067","geo_lat":"26.3020","geo_lng":"-80.2370","age_min":"5","age_max":"14","grades":"","camp_type":"coding;robotics;stem","format":"day","dates":"Summer 2026 (at Windmill Park, Coconut Creek)","daily_hours":"Half-day and full-day","days_of_week":"Mon\u2013Fri","meals_included":"no","extended_care":"none","activities":"coding;robotics;LEGO;drones;game design;Scratch;Python","required_gear":"","refund_policy_summary":"","sibling_policy_summary":"","medical_forms_required":"unknown","special_needs_support_notes":"","transportation":"not_provided","safety_notes":"","last_verified_date":"2026-03-22","data_quality_flags":"missing_price;missing_dates","status":"confirmed","categories":["STEM & Technology"]},{"id":"camp_042","camp_name":"Young Engineers Robotics Camp","provider_name":"Young Engineers","provider_type":"private education","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"not listed","registration_url":"not listed","source_urls":"not listed","contact_email":"not listed","contact_phone":"not listed","address_line1":"not listed","city":"Coral Springs","state":"FL","zip":"33065","geo_lat":"not listed","geo_lng":"not listed","age_min":"not listed","age_max":"not listed","grades":"not listed","camp_type":"stem robotics","format":"in_person","dates":"not listed","daily_hours":"not listed","days_of_week":"not listed","meals_included":"not listed","extended_care":"not listed","activities":"robotics engineering building activities","required_gear":"not listed","refund_policy_summary":"not listed","sibling_policy_summary":"not listed","medical_forms_required":"not listed","special_needs_support_notes":"not listed","transportation":"not listed","safety_notes":"instructor supervision","last_verified_date":"2026-03-16","data_quality_flags":"limited_data","status":"confirmed","categories":["STEM & Technology"]},{"id":"camp_043","camp_name":"theCoderSchool Coding Camp","provider_name":"theCoderSchool Coral Springs","provider_type":"franchise","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"https://www.thecoderschool.com/locations/coralsprings/","registration_url":"https://www.thecoderschool.com/locations/coralsprings/camps/","source_urls":"https://www.thecoderschool.com/locations/coralsprings/camps/","contact_email":"coralsprings@thecoderschool.com","contact_phone":"954-281-5588","address_line1":"10633 Wiles Rd","city":"Coral Springs","state":"FL","zip":"33076","geo_lat":"26.3020","geo_lng":"-80.2370","age_min":"6","age_max":"14","grades":"","camp_type":"coding;stem","format":"day","dates":"Summer 2026","daily_hours":"Half-day and full-day","days_of_week":"Mon\u2013Fri","meals_included":"no","extended_care":"none","activities":"coding;robotics;AI;game design;Scratch;Python","required_gear":"","refund_policy_summary":"","sibling_policy_summary":"","medical_forms_required":"unknown","special_needs_support_notes":"","transportation":"not_provided","safety_notes":"Low student-to-teacher ratio","last_verified_date":"2026-03-22","data_quality_flags":"missing_price;missing_dates","status":"confirmed","categories":["STEM & Technology"]},{"id":"camp_044","camp_name":"5678 Dance Camp","provider_name":"City of Parkland Parks and Recreation","provider_type":"municipal","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"https://www.cityofparkland.org/1098/Summer-Camps","registration_url":"https://www.cityofparkland.org/1098/Summer-Camps","source_urls":"https://www.cityofparkland.org/1098/Summer-Camps","contact_email":"not listed","contact_phone":"not listed","address_line1":"P-REC Recreation Center","city":"Parkland","state":"FL","zip":"33067","geo_lat":"not listed","geo_lng":"not listed","age_min":"5","age_max":"not listed","grades":"not listed","camp_type":"dance","format":"in_person","dates":"not listed","daily_hours":"not listed","days_of_week":"Mon,Tue,Wed,Thu,Fri","meals_included":"not listed","extended_care":"dance choreography technique activities","activities":"dance clothing","required_gear":"not listed","refund_policy_summary":"not listed","sibling_policy_summary":"not listed","medical_forms_required":"not listed","special_needs_support_notes":"not listed","transportation":"instructor supervision","safety_notes":"2026-03-16","last_verified_date":"partial_data","data_quality_flags":"Active","status":"confirmed","categories":["Arts & Performance"]},{"id":"camp_045","camp_name":"Art Paper Scissors Summer Camp","provider_name":"Art Paper Scissors","provider_type":"private","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"https://www.myartpaperscissors.com/","registration_url":"https://www.myartpaperscissors.com/","source_urls":"https://www.myartpaperscissors.com/","contact_email":"","contact_phone":"754-444-9936","address_line1":"6600 Parkside Dr #6654","city":"Parkland","state":"FL","zip":"33067","geo_lat":"26.3106","geo_lng":"-80.2540","age_min":"4","age_max":"12","grades":"","camp_type":"arts","format":"day","dates":"June\u2013August 2026","daily_hours":"9:00 AM\u20133:00 PM","days_of_week":"Mon\u2013Fri","meals_included":"no","extended_care":"unknown","activities":"painting;mixed media;crafts;games;outdoor play","required_gear":"","refund_policy_summary":"","sibling_policy_summary":"","medical_forms_required":"unknown","special_needs_support_notes":"","transportation":"not_provided","safety_notes":"","last_verified_date":"2026-03-22","data_quality_flags":"missing_price;missing_dates","status":"confirmed","categories":["Arts & Performance"]},{"id":"camp_046","camp_name":"Camp Invention","provider_name":"National Inventors Hall of Fame","provider_type":"nonprofit","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"https://www.invent.org/programs/camp-invention","registration_url":"https://www.invent.org/programs/camp-invention","source_urls":"https://www.invent.org/programs/camp-invention","contact_email":"Not Listed","contact_phone":"8009684332","address_line1":"Not Listed","city":"Parkland","state":"FL","zip":"33067","geo_lat":"Not Listed","geo_lng":"Not Listed","age_min":"6","age_max":"12","grades":"Not Listed","camp_type":"stem,engineering,invention","format":"day","dates":"Summer 2026 at Somerset Parkland Academy","daily_hours":"09:00-15:30","days_of_week":"Mon,Tue,Wed,Thu,Fri","meals_included":"no","extended_care":"none","activities":"engineering design inventing robotics creativity problem solving","required_gear":"notebook water bottle","refund_policy_summary":"Program refund policy applies","sibling_policy_summary":"Not Listed","medical_forms_required":"Not Listed","special_needs_support_notes":"Not Listed","transportation":"not_provided","safety_notes":"Instructor supervised STEM activities","last_verified_date":"2026-03-22","data_quality_flags":"missing_price","status":"confirmed","categories":["STEM & Technology"]},{"id":"camp_047","camp_name":"Gan Israel Day Camp","provider_name":"Chabad of Parkland","provider_type":"nonprofit","religious_affiliation":"yes","denomination_or_affiliation":"Chabad/Lubavitch","website_url":"https://www.chabadofparkland.com/templates/articlecco_cdo/aid/3426845/jewish/Gan-Israel-Day-Camp.htm","registration_url":"https://www.chabadofparkland.com/templates/articlecco_cdo/aid/3426845/jewish/Gan-Israel-Day-Camp.htm","source_urls":"https://www.chabadofparkland.com/templates/articlecco_cdo/aid/3426845/jewish/Gan-Israel-Day-Camp.htm","contact_email":"Not Listed","contact_phone":"9546880770","address_line1":"7170 Loxahatchee Rd","city":"Parkland","state":"FL","zip":"33067","geo_lat":"Not Listed","geo_lng":"Not Listed","age_min":"5","age_max":"13","grades":"Not Listed","camp_type":"religious,day_camp,arts,sports","format":"day","dates":"June-July sessions","daily_hours":"09:00-15:30","days_of_week":"Mon,Tue,Wed,Thu,Fri","meals_included":"Not Listed","extended_care":"both","activities":"sports crafts trips water play jewish culture activities","required_gear":"sunscreen water bottle","refund_policy_summary":"Not Listed","sibling_policy_summary":"sibling discount available","medical_forms_required":"Not Listed","special_needs_support_notes":"Not Listed","transportation":"not_provided","safety_notes":"Rabbinical and counselor supervision","last_verified_date":"2026-03-22","data_quality_flags":"missing_price","status":"confirmed","categories":["Arts & Performance","Day Camp","Faith-Based","Sports"]},{"id":"camp_048","camp_name":"Janet's Planet Astronaut Camp","provider_name":"Janet's Planet","provider_type":"private","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"https://janetsplanet.com","registration_url":"https://janetsplanet.com","source_urls":"https://janetsplanet.com","contact_email":"Not Listed","contact_phone":"Not Listed","address_line1":"Not Listed","city":"Parkland","state":"FL","zip":"33067","geo_lat":"Not Listed","geo_lng":"Not Listed","age_min":"8","age_max":"13","grades":"Not Listed","camp_type":"stem,space,science","format":"day","dates":"summer sessions","daily_hours":"09:00-15:00","days_of_week":"Mon,Tue,Wed,Thu,Fri","meals_included":"no","extended_care":"none","activities":"astronomy rockets space missions science experiments","required_gear":"notebook water bottle","refund_policy_summary":"Not Listed","sibling_policy_summary":"Not Listed","medical_forms_required":"no","special_needs_support_notes":"Not Listed","transportation":"not_provided","safety_notes":"Instructor supervised science activities","last_verified_date":"2026-03-16","data_quality_flags":"missing_contact,missing_price","status":"confirmed","categories":["STEM & Technology"]},{"id":"camp_049","camp_name":"Kingdom Basketball Camp","provider_name":"Kingdom Training Academy","provider_type":"sports_organization","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"Not Listed","registration_url":"Not Listed","source_urls":"Not Listed","contact_email":"Not Listed","contact_phone":"Not Listed","address_line1":"Not Listed","city":"Parkland","state":"FL","zip":"33067","geo_lat":"Not Listed","geo_lng":"Not Listed","age_min":"6","age_max":"16","grades":"Not Listed","camp_type":"sports,basketball","format":"day","dates":"summer weekly camps","daily_hours":"09:00-15:00","days_of_week":"Mon,Tue,Wed,Thu,Fri","meals_included":"no","extended_care":"none","activities":"ball handling shooting defense conditioning scrimmages","required_gear":"basketball shoes water bottle","refund_policy_summary":"Not Listed","sibling_policy_summary":"Not Listed","medical_forms_required":"no","special_needs_support_notes":"Not Listed","transportation":"not_provided","safety_notes":"Coach supervised basketball instruction","last_verified_date":"2026-03-16 00:00:00","data_quality_flags":"missing_contact,missing_price","status":"confirmed","categories":["Sports"]},{"id":"camp_050","camp_name":"Malachi Acres Riding Camp","provider_name":"Malachi Acres","provider_type":"private","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"https://malachiacres.com/","registration_url":"https://malachiacres.com/summer-camp/","source_urls":"https://malachiacres.com/summer-camp/","contact_email":"malachiacresfla@gmail.com","contact_phone":"954-464-1239","address_line1":"4701 Godfrey Rd","city":"Parkland","state":"FL","zip":"33067","geo_lat":"26.3200","geo_lng":"-80.2400","age_min":"5","age_max":"17","grades":"","camp_type":"outdoor;specialty","format":"day","dates":"Summer 2026","daily_hours":"9:00 AM\u20132:00 PM","days_of_week":"Mon\u2013Fri","meals_included":"no","extended_care":"both","activities":"horseback riding;equine knowledge;mounted games;bareback riding;crafts","required_gear":"","refund_policy_summary":"","sibling_policy_summary":"","medical_forms_required":"unknown","special_needs_support_notes":"","transportation":"not_provided","safety_notes":"Readers' Choice Best Summer Camp 2020-2025","last_verified_date":"2026-03-22","data_quality_flags":"","status":"confirmed","categories":["Nature & Outdoor"]},{"id":"camp_051","camp_name":"Parkland Children's Academy Summer Camp","provider_name":"Parkland Children's Academy","provider_type":"private school","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"https://www.parklandchildrensacademy.com/summer-camp/","registration_url":"https://www.parklandchildrensacademy.com/summer-camp/","source_urls":"https://www.parklandchildrensacademy.com/summer-camp/","contact_email":"not listed","contact_phone":"9546885877","address_line1":"6624 Parkside Dr","city":"Parkland","state":"FL","zip":"33067","geo_lat":"not listed","geo_lng":"not listed","age_min":"5","age_max":"12","grades":"not listed","camp_type":"traditional day camp","format":"in_person","dates":"not listed","daily_hours":"07:00-18:00","days_of_week":"Mon,Tue,Wed,Thu,Fri","meals_included":"no","extended_care":"before_after","activities":"sports water play field trips crafts","required_gear":"camp shirt lunch water bottle","refund_policy_summary":"not listed","sibling_policy_summary":"not listed","medical_forms_required":"not listed","special_needs_support_notes":"not listed","transportation":"not listed","safety_notes":"staff supervision","last_verified_date":"2026-03-16","data_quality_flags":"verified_source","status":"confirmed","categories":["Day Camp"]},{"id":"camp_052","camp_name":"Parkland High Performance Tennis Camp","provider_name":"Quigley Tennis Center","provider_type":"sports_organization","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"https://quigleytennis.com","registration_url":"https://quigleytennis.com","source_urls":"https://quigleytennis.com","contact_email":"Not Listed","contact_phone":"9547537222","address_line1":"12101 Loxahatchee Rd","city":"Parkland","state":"FL","zip":"33076","geo_lat":"Not Listed","geo_lng":"Not Listed","age_min":"8","age_max":"17","grades":"Not Listed","camp_type":"sports,tennis,training","format":"day","dates":"summer weekly sessions","daily_hours":"09:00-15:00","days_of_week":"Mon,Tue,Wed,Thu,Fri","meals_included":"no","extended_care":"none","activities":"advanced tennis drills strength training match play","required_gear":"tennis racket water bottle tennis shoes","refund_policy_summary":"Not Listed","sibling_policy_summary":"Not Listed","medical_forms_required":"no","special_needs_support_notes":"Not Listed","transportation":"not_provided","safety_notes":"Professional tennis coaches supervision","last_verified_date":"2026-03-16","data_quality_flags":"missing_price","status":"confirmed","categories":["Sports"]},{"id":"camp_053","camp_name":"Parkland International Music Academy Camp","provider_name":"Parkland International Music Academy","provider_type":"private","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"http://www.musicparkland.com/summer-camp.html","registration_url":"http://www.musicparkland.com/summer-camp.html","source_urls":"http://www.musicparkland.com/summer-camp.html","contact_email":"","contact_phone":"","address_line1":"Parkland","city":"Parkland","state":"FL","zip":"33067","geo_lat":"26.3100","geo_lng":"-80.2540","age_min":"5","age_max":"12","grades":"","camp_type":"music;arts","format":"day","dates":"Summer 2026","daily_hours":"Full day and half day","days_of_week":"Mon\u2013Fri","meals_included":"no","extended_care":"unknown","activities":"music;karaoke;instruments;art;crafts;performance","required_gear":"","refund_policy_summary":"","sibling_policy_summary":"","medical_forms_required":"unknown","special_needs_support_notes":"","transportation":"provided","safety_notes":"Transports to Art Paper Scissors for art portion","last_verified_date":"2026-03-22","data_quality_flags":"missing_price;missing_dates;missing_contact;ambiguous_location","status":"flagged_pending","categories":["Arts & Performance"]},{"id":"camp_054","camp_name":"Parkland Kids Camp","provider_name":"City of Parkland","provider_type":"municipal","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"https://www.cityofparkland.org/1098/Summer-Camps","registration_url":"https://www.cityofparkland.org/1098/Summer-Camps","source_urls":"https://www.cityofparkland.org/1098/Summer-Camps","contact_email":"not listed","contact_phone":"not listed","address_line1":"Park Trails Elementary School","city":"Parkland","state":"FL","zip":"33067","geo_lat":"not listed","geo_lng":"not listed","age_min":"5","age_max":"10","grades":"K\u20134","camp_type":"traditional day camp","format":"in_person","dates":"Summer 2026","daily_hours":"7:30 AM\u20135:30 PM","days_of_week":"Mon,Tue,Wed,Thu,Fri","meals_included":"no","extended_care":"both","activities":"field trips crafts games outdoor activities","required_gear":"lunch snacks water bottle","refund_policy_summary":"not listed","sibling_policy_summary":"10 percent sibling discount","medical_forms_required":"yes","special_needs_support_notes":"not listed","transportation":"not listed","safety_notes":"city staff supervision","last_verified_date":"2026-03-22","data_quality_flags":"verified_source","status":"confirmed","categories":["Day Camp"]},{"id":"camp_055","camp_name":"Parkland Travel Camp","provider_name":"City of Parkland","provider_type":"municipal","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"https://www.cityofparkland.org/1098/Summer-Camps","registration_url":"https://www.cityofparkland.org/1098/Summer-Camps","source_urls":"https://www.cityofparkland.org/1098/Summer-Camps","contact_email":"not listed","contact_phone":"not listed","address_line1":"Westglades Middle School","city":"Parkland","state":"FL","zip":"33067","geo_lat":"not listed","geo_lng":"not listed","age_min":"11","age_max":"14","grades":"5-8","camp_type":"traditional day camp","format":"in_person","dates":"Summer 2026","daily_hours":"8:00 AM\u20135:00 PM","days_of_week":"Mon,Tue,Wed,Thu,Fri","meals_included":"no","extended_care":"not listed","activities":"field trips travel activities outdoor recreation","required_gear":"lunch snacks water bottle","refund_policy_summary":"not listed","sibling_policy_summary":"not listed","medical_forms_required":"yes","special_needs_support_notes":"not listed","transportation":"not listed","safety_notes":"city staff supervision","last_verified_date":"2026-03-22","data_quality_flags":"verified_source","status":"confirmed","categories":["Day Camp"]},{"id":"camp_056","camp_name":"Quigley Tennis Camp","provider_name":"Quigley Tennis Center","provider_type":"sports_organization","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"https://quigleytennis.com","registration_url":"https://quigleytennis.com","source_urls":"https://quigleytennis.com","contact_email":"Not Listed","contact_phone":"9547537222","address_line1":"12101 Loxahatchee Rd","city":"Parkland","state":"FL","zip":"33076","geo_lat":"Not Listed","geo_lng":"Not Listed","age_min":"5","age_max":"15","grades":"Not Listed","camp_type":"sports,tennis","format":"day","dates":"weekly summer sessions","daily_hours":"09:00-15:00","days_of_week":"Mon,Tue,Wed,Thu,Fri","meals_included":"no","extended_care":"none","activities":"tennis drills footwork conditioning match play","required_gear":"tennis racket water bottle tennis shoes","refund_policy_summary":"Not Listed","sibling_policy_summary":"Not Listed","medical_forms_required":"no","special_needs_support_notes":"Not Listed","transportation":"not_provided","safety_notes":"Professional tennis coaching staff","last_verified_date":"2026-03-16","data_quality_flags":"missing_price","status":"confirmed","categories":["Sports"]},{"id":"camp_057","camp_name":"Reign Volleyball Camp","provider_name":"Reign Volleyball","provider_type":"sports_organization","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"Not Listed","registration_url":"Not Listed","source_urls":"Not Listed","contact_email":"Not Listed","contact_phone":"Not Listed","address_line1":"Not Listed","city":"Parkland","state":"FL","zip":"33067","geo_lat":"Not Listed","geo_lng":"Not Listed","age_min":"6","age_max":"16","grades":"Not Listed","camp_type":"sports,volleyball","format":"day","dates":"summer weekly sessions","daily_hours":"09:00-15:00","days_of_week":"Mon,Tue,Wed,Thu,Fri","meals_included":"no","extended_care":"none","activities":"volleyball drills serving passing team scrimmages conditioning","required_gear":"athletic shoes knee pads water bottle","refund_policy_summary":"Not Listed","sibling_policy_summary":"Not Listed","medical_forms_required":"no","special_needs_support_notes":"Not Listed","transportation":"not_provided","safety_notes":"Coach supervised volleyball training","last_verified_date":"2026-03-16","data_quality_flags":"missing_contact,missing_price","status":"confirmed","categories":["Sports"]},{"id":"camp_058","camp_name":"Snapology Robotics Camp","provider_name":"Snapology","provider_type":"private","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"https://www.snapology.com","registration_url":"Not Listed","source_urls":"https://www.snapology.com","contact_email":"Not Listed","contact_phone":"Not Listed","address_line1":"Not Listed","city":"Parkland","state":"FL","zip":"33067","geo_lat":"Not Listed","geo_lng":"Not Listed","age_min":"5","age_max":"10","grades":"Not Listed","camp_type":"stem,robotics,engineering","format":"day","dates":"weekly summer sessions","daily_hours":"09:00-15:00","days_of_week":"Mon,Tue,Wed,Thu,Fri","meals_included":"no","extended_care":"none","activities":"lego robotics engineering design building coding basics","required_gear":"water bottle","refund_policy_summary":"Not Listed","sibling_policy_summary":"Not Listed","medical_forms_required":"no","special_needs_support_notes":"Not Listed","transportation":"not_provided","safety_notes":"Instructor supervised STEM activities","last_verified_date":"2026-03-16 00:00:00","data_quality_flags":"missing_contact,missing_price","status":"confirmed","categories":["STEM & Technology"]},{"id":"camp_059","camp_name":"Tutor Zone Academic Camp","provider_name":"Tutor Zone","provider_type":"private","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"https://tutorzone.com","registration_url":"https://tutorzone.com","source_urls":"https://tutorzone.com","contact_email":"Not Listed","contact_phone":"Not Listed","address_line1":"Not Listed","city":"Parkland","state":"FL","zip":"33067","geo_lat":"Not Listed","geo_lng":"Not Listed","age_min":"5","age_max":"12","grades":"Not Listed","camp_type":"academics,tutoring,education","format":"day","dates":"summer weekly sessions","daily_hours":"09:00-15:00","days_of_week":"Mon,Tue,Wed,Thu,Fri","meals_included":"no","extended_care":"none","activities":"reading math enrichment learning games stem challenges","required_gear":"notebook pencil water bottle","refund_policy_summary":"Not Listed","sibling_policy_summary":"Not Listed","medical_forms_required":"no","special_needs_support_notes":"Not Listed","transportation":"not_provided","safety_notes":"Instructor supervised academic camp","last_verified_date":"2026-03-16","data_quality_flags":"missing_contact,missing_price","status":"confirmed","categories":["Academics"]},{"id":"camp_060","camp_name":"American Heritage Summer Day Camp","provider_name":"American Heritage School","provider_type":"private school","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"https://www.ahschool.com/summer-program","registration_url":"https://www.ahschool.com/summer-program","source_urls":"https://www.ahschool.com/summer-program","contact_email":"not listed","contact_phone":"not listed","address_line1":"12200 W Broward Blvd","city":"Plantation","state":"FL","zip":"33325","geo_lat":"not listed","geo_lng":"not listed","age_min":"3","age_max":"14","grades":"not listed","camp_type":"sports stem arts","format":"in_person","dates":"not listed","daily_hours":"not listed","days_of_week":"Mon,Tue,Wed,Thu,Fri","meals_included":"not listed","extended_care":"not listed","activities":"robotics drama swimming tennis sports","required_gear":"sports clothing","refund_policy_summary":"not listed","sibling_policy_summary":"not listed","medical_forms_required":"not listed","special_needs_support_notes":"not listed","transportation":"not listed","safety_notes":"school staff supervision","last_verified_date":"2026-03-16","data_quality_flags":"verified_source","status":"confirmed","categories":["Arts & Performance","STEM & Technology","Sports"]},{"id":"camp_061","camp_name":"Camp JCC","provider_name":"JCC Broward","provider_type":"nonprofit","religious_affiliation":"yes","denomination_or_affiliation":"","website_url":"https://jccbroward.org","registration_url":"https://jccbroward.org","source_urls":"https://jccbroward.org","contact_email":"Not Listed","contact_phone":"9544340499","address_line1":"6501 W Sunrise Blvd","city":"Plantation","state":"FL","zip":"33313","geo_lat":"Not Listed","geo_lng":"Not Listed","age_min":"5","age_max":"16","grades":"Not Listed","camp_type":"day_camp,sports,arts,swimming","format":"day","dates":"June-August weekly sessions","daily_hours":"09:00-16:00","days_of_week":"Mon,Tue,Wed,Thu,Fri","meals_included":"Not Listed","extended_care":"both","activities":"sports swimming arts crafts field trips leadership programs","required_gear":"swimsuit towel lunch sunscreen","refund_policy_summary":"Not Listed","sibling_policy_summary":"sibling discount available","medical_forms_required":"Not Listed","special_needs_support_notes":"Not Listed","transportation":"provided","safety_notes":"Community center staff supervision","last_verified_date":"2026-03-16","data_quality_flags":"missing_price","status":"confirmed","categories":["Arts & Performance","Day Camp","Sports"]},{"id":"camp_062","camp_name":"YMCA Summer Day Camp","provider_name":"YMCA of South Florida","provider_type":"nonprofit","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"https://ymcasouthflorida.org","registration_url":"https://ymcasouthflorida.org","source_urls":"https://ymcasouthflorida.org","contact_email":"not listed","contact_phone":"9543349622","address_line1":"not listed","city":"Pompano Beach","state":"FL","zip":"33073","geo_lat":"not listed","geo_lng":"not listed","age_min":"5","age_max":"15","grades":"not listed","camp_type":"traditional day camp","format":"in_person","dates":"June-August","daily_hours":"08:30-16:30","days_of_week":"Mon,Tue,Wed,Thu,Fri","meals_included":"not listed","extended_care":"before_after","activities":"sports swimming crafts field trips","required_gear":"swimsuit towel","refund_policy_summary":"not listed","sibling_policy_summary":"sibling discount","medical_forms_required":"not listed","special_needs_support_notes":"not listed","transportation":"not listed","safety_notes":"staff supervision","last_verified_date":"2026-03-16","data_quality_flags":"partial_data","status":"confirmed","categories":["Day Camp"]},{"id":"camp_063","camp_name":"Boca Ice Skating Camp","provider_name":"Palm Beach Ice Works","provider_type":"sports","religious_affiliation":"no","denomination_or_affiliation":"","website_url":"https://pbiceworks.com","registration_url":"https://pbiceworks.com","source_urls":"https://pbiceworks.com","contact_email":"not listed","contact_phone":"5616564044","address_line1":"1590 N Florida Mango Rd","city":"West Palm Beach","state":"FL","zip":"33409","geo_lat":"not listed","geo_lng":"not listed","age_min":"6","age_max":"15","grades":"not listed","camp_type":"ice skating camp","format":"in_person","dates":"not listed","daily_hours":"09:00-15:00","days_of_week":"Mon,Tue,Wed,Thu,Fri","meals_included":"not listed","extended_care":"not listed","activities":"ice skating training off ice conditioning","required_gear":"skates gloves","refund_policy_summary":"not listed","sibling_policy_summary":"not listed","medical_forms_required":"not listed","special_needs_support_notes":"not listed","transportation":"not listed","safety_notes":"coach supervision","last_verified_date":"2026-03-16","data_quality_flags":"partial_data","status":"confirmed","categories":["Sports"]}];
+
+// State
+let selectedIds=new Set();
+let activeFilters={categories:new Set(),cities:new Set(),zips:new Set(),ageMin:2,ageMax:16};
+let filtersOpen=false;
+
+// Init
+document.addEventListener('DOMContentLoaded',()=>{
+buildFilterChips();
+document.getElementById('searchInput').addEventListener('input',debounce(renderCamps,200));
+renderCamps();
+});
+
+function debounce(fn,ms){let t;return function(...a){clearTimeout(t);t=setTimeout(()=>fn(...a),ms)}}
+
+// Build filter chips
+function buildFilterChips(){
+const cats=[...new Set(CAMPS.flatMap(c=>c.categories))].sort();
+const cities=[...new Set(CAMPS.map(c=>c.city))].sort();
+const zips=[...new Set(CAMPS.map(c=>c.zip))].sort();
+document.getElementById('categoryFilters').innerHTML=cats.map(c=>`<button class="chip" data-filter="categories" data-value="${c}" onclick="toggleChip(this)">${c}</button>`).join('');
+document.getElementById('cityFilters').innerHTML=cities.map(c=>`<button class="chip" data-filter="cities" data-value="${c}" onclick="toggleChip(this)">${c}</button>`).join('');
+document.getElementById('zipFilters').innerHTML=zips.map(c=>`<button class="chip" data-filter="zips" data-value="${c}" onclick="toggleChip(this)">${c}</button>`).join('');
+}
+
+function toggleFilters(){
+filtersOpen=!filtersOpen;
+document.getElementById('filterToggle').classList.toggle('open',filtersOpen);
+document.getElementById('filterBody').classList.toggle('open',filtersOpen);
+}
+
+function toggleChip(el){
+const fType=el.dataset.filter;
+const val=el.dataset.value;
+if(activeFilters[fType].has(val)){activeFilters[fType].delete(val);el.classList.remove('active')}
+else{activeFilters[fType].add(val);el.classList.add('active')}
+updateActiveTags();
+renderCamps();
+}
+
+function updateAgeFilter(){
+const mn=parseInt(document.getElementById('ageMinSlider').value);
+const mx=parseInt(document.getElementById('ageMaxSlider').value);
+activeFilters.ageMin=Math.min(mn,mx);
+activeFilters.ageMax=Math.max(mn,mx);
+document.getElementById('ageMinVal').textContent=activeFilters.ageMin;
+document.getElementById('ageMaxVal').textContent=activeFilters.ageMax;
+updateActiveTags();
+renderCamps();
+}
+
+function updateActiveTags(){
+const wrap=document.getElementById('activeFilters');
+let html='';
+['categories','cities','zips'].forEach(fType=>{
+activeFilters[fType].forEach(v=>{
+html+=`<span class="active-tag" onclick="removeFilter('${fType}','${v}')">${v} <span class="x">&times;</span></span>`;
+});
+});
+if(activeFilters.ageMin>2||activeFilters.ageMax<16){
+html+=`<span class="active-tag" onclick="resetAge()">Ages ${activeFilters.ageMin}–${activeFilters.ageMax} <span class="x">&times;</span></span>`;
+}
+if(html){html+=`<span class="clear-all" onclick="clearAllFilters()">Clear all</span>`}
+wrap.innerHTML=html;
+}
+
+function removeFilter(fType,val){
+activeFilters[fType].delete(val);
+document.querySelectorAll(`.chip[data-filter="${fType}"][data-value="${val}"]`).forEach(c=>c.classList.remove('active'));
+updateActiveTags();
+renderCamps();
+}
+
+function resetAge(){
+activeFilters.ageMin=2;activeFilters.ageMax=16;
+document.getElementById('ageMinSlider').value=2;
+document.getElementById('ageMaxSlider').value=16;
+document.getElementById('ageMinVal').textContent='2';
+document.getElementById('ageMaxVal').textContent='16';
+updateActiveTags();
+renderCamps();
+}
+
+function clearAllFilters(){
+['categories','cities','zips'].forEach(f=>activeFilters[f].clear());
+activeFilters.ageMin=2;activeFilters.ageMax=16;
+document.querySelectorAll('.chip.active').forEach(c=>c.classList.remove('active'));
+document.getElementById('ageMinSlider').value=2;
+document.getElementById('ageMaxSlider').value=16;
+document.getElementById('ageMinVal').textContent='2';
+document.getElementById('ageMaxVal').textContent='16';
+updateActiveTags();
+renderCamps();
+}
+
+function clearSearch(){
+document.getElementById('searchInput').value='';
+document.getElementById('searchClear').classList.remove('visible');
+renderCamps();
+}
+
+// Filter & sort
+function getFilteredCamps(){
+const q=document.getElementById('searchInput').value.toLowerCase().trim();
+document.getElementById('searchClear').classList.toggle('visible',q.length>0);
+return CAMPS.filter(c=>{
+// Search
+if(q){
+const hay=(c.camp_name+' '+c.provider_name+' '+c.city+' '+c.zip+' '+c.camp_type+' '+c.activities).toLowerCase();
+if(!hay.includes(q))return false;
+}
+// Category
+if(activeFilters.categories.size>0){
+if(!c.categories.some(cat=>activeFilters.categories.has(cat)))return false;
+}
+// City
+if(activeFilters.cities.size>0&&!activeFilters.cities.has(c.city))return false;
+// Zip
+if(activeFilters.zips.size>0&&!activeFilters.zips.has(c.zip))return false;
+// Age
+const cMin=parseInt(c.age_min)||0;
+const cMax=parseInt(c.age_max)||99;
+if(cMin>activeFilters.ageMax||cMax<activeFilters.ageMin)return false;
+return true;
+});
+}
+
+function sortCamps(camps){
+const sort=document.getElementById('sortSelect').value;
+const copy=[...camps];
+switch(sort){
+case'name-asc':copy.sort((a,b)=>a.camp_name.localeCompare(b.camp_name));break;
+case'name-desc':copy.sort((a,b)=>b.camp_name.localeCompare(a.camp_name));break;
+case'city-asc':copy.sort((a,b)=>a.city.localeCompare(b.city)||a.camp_name.localeCompare(b.camp_name));break;
+case'date-asc':copy.sort((a,b)=>{
+const da=a.dates&&a.dates!=='not listed'?a.dates:'zzz';
+const db=b.dates&&b.dates!=='not listed'?b.dates:'zzz';
+return da.localeCompare(db);
+});break;
+}
+return copy;
+}
+
+// Render
+function renderCamps(){
+const filtered=sortCamps(getFilteredCamps());
+const grid=document.getElementById('campGrid');
+document.getElementById('resultCount').innerHTML=`<span>${filtered.length}</span> camp${filtered.length!==1?'s':''} found`;
+if(filtered.length===0){
+grid.innerHTML=`<div class="no-results"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><h3>No camps match your search</h3><p>Try adjusting your filters or search terms</p></div>`;
+return;
+}
+grid.innerHTML=filtered.map(c=>campCard(c)).join('');
+updateSelectionBar();
+}
+
+function campCard(c){
+const sel=selectedIds.has(c.id);
+const ageMin=c.age_min&&c.age_min!=='not listed'?c.age_min:'–';
+const ageMax=c.age_max&&c.age_max!=='not listed'?c.age_max:'–';
+const dates=c.dates&&c.dates!=='not listed'?c.dates:'Dates TBD';
+const tags=c.categories.map(t=>`<span class="card-tag">${t}</span>`).join('');
+return `<div class="camp-card${sel?' selected':''}" id="card-${c.id}">
+<div class="card-header">
+<div class="card-title-area">
+<div class="card-title">${esc(c.camp_name)}</div>
+<div class="card-provider">${esc(c.provider_name)}</div>
+</div>
+<div class="card-check" onclick="toggleSelect('${c.id}')">
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+</div>
+</div>
+<div class="card-body">
+<div class="card-tags">${tags}</div>
+<div class="card-details">
+<div class="card-detail"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>${esc(c.city)}, ${esc(c.zip)}</div>
+<div class="card-detail"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Ages <strong>${ageMin}–${ageMax}</strong></div>
+<div class="card-detail"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>${esc(dates)}</div>
+</div>
+</div>
+<div class="card-footer">
+<button class="btn btn-navy" onclick="openDetail('${c.id}')">Details</button>
+<button class="btn btn-teal" onclick="openRegister('${c.id}')">Register</button>
+</div>
+</div>`;
+}
+
+function esc(s){if(!s)return'';return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+
+// Selection
+function toggleSelect(id){
+if(selectedIds.has(id))selectedIds.delete(id);else selectedIds.add(id);
+const card=document.getElementById('card-'+id);
+if(card)card.classList.toggle('selected',selectedIds.has(id));
+updateSelectionBar();
+}
+
+function updateSelectionBar(){
+const bar=document.getElementById('selectionBar');
+const n=selectedIds.size;
+bar.classList.toggle('active',n>0);
+document.getElementById('selCount').textContent=n;
+document.getElementById('selLabel').textContent=n===1?'camp selected':'camps selected';
+}
+
+function clearSelection(){
+selectedIds.clear();
+document.querySelectorAll('.camp-card.selected').forEach(c=>c.classList.remove('selected'));
+updateSelectionBar();
+}
+
+// Detail modal
+function openDetail(id){
+const c=CAMPS.find(x=>x.id===id);if(!c)return;
+document.getElementById('modalTitle').textContent=c.camp_name;
+document.getElementById('modalProvider').textContent=c.provider_name;
+const fields=[
+['City',c.city],['Zip Code',c.zip],['Age Range',(c.age_min||'?')+'–'+(c.age_max||'?')],
+['Grades',c.grades],['Camp Type',c.camp_type],['Format',c.format],
+['Dates',c.dates],['Hours',c.daily_hours],['Days',c.days_of_week],
+['Meals',c.meals_included],['Extended Care',c.extended_care],
+['Activities',c.activities],['Required Gear',c.required_gear],
+['Refund Policy',c.refund_policy_summary],['Sibling Policy',c.sibling_policy_summary],
+['Medical Forms',c.medical_forms_required],['Special Needs',c.special_needs_support_notes],
+['Transportation',c.transportation],['Safety',c.safety_notes],
+['Phone',c.contact_phone],['Email',c.contact_email],['Address',c.address_line1],
+['Website',c.website_url?`<a href="${c.website_url}" target="_blank" rel="noopener">${c.website_url}</a>`:'not listed']
+];
+const grid=document.getElementById('modalGrid');
+grid.innerHTML=fields.filter(([,v])=>v&&v!=='not listed'&&v!=='not_provided'&&v!=='unknown'&&v!=='').map(([label,val],i)=>{
+const full=(label==='Activities'||label==='Website'||label==='Address'||label==='Refund Policy'||label==='Safety')?'full':'';
+return `<div class="detail-item ${full}"><div class="detail-label">${label}</div><div class="detail-value">${label==='Website'?val:esc(val)}</div></div>`;
+}).join('');
+const actions=document.getElementById('modalActions');
+actions.innerHTML=`<button class="btn btn-teal" onclick="openRegister('${c.id}')">Register</button>`;
+if(c.website_url&&c.website_url!=='not listed'){
+actions.innerHTML+=`<button class="btn btn-outline" onclick="window.open('${c.website_url}','_blank')">Visit Website</button>`;
+}
+document.getElementById('detailModal').classList.add('active');
+document.body.style.overflow='hidden';
+}
+
+function openRegister(id){
+const c=CAMPS.find(x=>x.id===id);if(!c)return;
+const url=c.registration_url&&c.registration_url!=='not listed'?c.registration_url:c.website_url;
+if(url&&url!=='not listed')window.open(url,'_blank');
+}
+
+function closeModal(id){
+document.getElementById(id).classList.remove('active');
+document.body.style.overflow='';
+}
+
+// Click outside modal to close
+document.addEventListener('click',e=>{
+if(e.target.classList.contains('modal-overlay'))closeModal(e.target.id);
+});
+
+// Compare
+function openCompare(){
+if(selectedIds.size<2){alert('Please select at least 2 camps to compare.');return}
+const camps=CAMPS.filter(c=>selectedIds.has(c.id));
+document.getElementById('compareCount').textContent=camps.length+' camps';
+const rows=[
+['Camp Name','camp_name'],['Provider','provider_name'],['City','city'],['Zip','zip'],
+['Ages',null,c=>(c.age_min||'?')+'–'+(c.age_max||'?')],
+['Type','camp_type'],['Dates','dates'],['Hours','daily_hours'],
+['Extended Care','extended_care'],['Activities','activities'],
+['Meals','meals_included'],['Phone','contact_phone']
+];
+let html='';
+rows.forEach(([label,key,fn])=>{
+html+=`<tr><th>${label}</th>`;
+camps.forEach(c=>{
+const val=fn?fn(c):(c[key]||'');
+const display=(!val||val==='not listed'||val==='not_provided'||val==='unknown')?'—':esc(val);
+html+=`<td>${display}</td>`;
+});
+html+=`</tr>`;
+});
+document.getElementById('compareTable').innerHTML=html;
+document.getElementById('compareModal').classList.add('active');
+document.body.style.overflow='hidden';
+}
+
+// Export CSV
+function exportCSV(mode){
+let camps;
+if(mode==='selected'){
+camps=CAMPS.filter(c=>selectedIds.has(c.id));
+if(camps.length===0){alert('No camps selected.');return}
+}else{
+camps=getFilteredCamps();
+}
+const headers=['Camp Name','Provider','City','Zip','Age Range','Camp Type','Dates','Hours','Days','Activities','Phone','Email','Website','Registration URL'];
+const keys=['camp_name','provider_name','city','zip',null,'camp_type','dates','daily_hours','days_of_week','activities','contact_phone','contact_email','website_url','registration_url'];
+let csv=headers.join(',')+String.fromCharCode(10);
+camps.forEach(c=>{
+const row=keys.map((k,i)=>{
+let v;
+if(!k)v=(c.age_min||'')+'–'+(c.age_max||'');
+else v=c[k]||'';
+if(v==='not listed'||v==='not_provided'||v==='unknown')v='';
+return '"'+v.replace(/"/g,'""')+'"';
+});
+csv+=row.join(',')+String.fromCharCode(10);
+});
+const blob=new Blob([csv],{type:'text/csv'});
+const a=document.createElement('a');
+a.href=URL.createObjectURL(blob);
+a.download='summer-camps-2026'+(mode==='selected'?'-selected':'')+'.csv';
+a.click();
+URL.revokeObjectURL(a.href);
+}
+
+// Keyboard
+document.addEventListener('keydown',e=>{
+if(e.key==='Escape'){
+closeModal('detailModal');
+closeModal('compareModal');
+}
+});
+</script>
 </body>
 </html>
