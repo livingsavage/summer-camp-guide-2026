@@ -201,9 +201,9 @@ body{font-family:'Oswald',sans-serif;background:var(--off-white);color:var(--tex
 <div class="hero">
   <div class="hero-top">
     <div class="top-nav">
-      <a href="https://www.livingsavage.com">
+      <a href="https://www.livingsavage.com/ai-tools-resources">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
-        Return to Home
+        Back to AI Tools &amp; Resources
       </a>
     </div>
     <a href="https://docs.google.com/forms/d/e/1FAIpQLSeIGSeNwWM2cJT2K7EbP1uupKRCvjQEhnWzaa6vY4HdS_dqGg/viewform?usp=publish-editor" target="_blank" class="add-camp-btn" title="Submit a camp to be added">
@@ -211,6 +211,7 @@ body{font-family:'Oswald',sans-serif;background:var(--off-white);color:var(--tex
       Add a Camp
     </a>
   </div>
+  <div style="text-align:center;margin:0 auto 6px;line-height:1;"><span style="font-family:'Oswald',sans-serif;font-weight:700;font-size:32px;color:#A8C2CE;letter-spacing:3px;text-transform:uppercase;display:block;">LIVING</span><span style="font-family:'Oswald',sans-serif;font-weight:300;font-size:32px;color:#BEAF9A;letter-spacing:3px;text-transform:uppercase;display:block;">SAVAGE</span></div>
   <h1>Summer Camp Finder</h1>
   <p>Summer Camps within 5 miles of Parkland (33067)</p>
   <div class="camp-count" id="totalCount">86 Camps</div>
@@ -240,8 +241,6 @@ body{font-family:'Oswald',sans-serif;background:var(--off-white);color:var(--tex
     <div class="filter-row" id="catFilters"></div>
     <div class="filter-label" style="margin-top:8px">City</div>
     <div class="filter-row" id="cityFilters"></div>
-    <div class="filter-label" style="margin-top:8px">Price Tier</div>
-    <div class="filter-row" id="priceFilters"></div>
   </div>
 </div>
 
@@ -253,7 +252,6 @@ body{font-family:'Oswald',sans-serif;background:var(--off-white);color:var(--tex
     <select class="sort-select" id="sortSelect" onchange="renderCamps()">
       <option value="name">Name A–Z</option>
       <option value="city">City</option>
-      <option value="price">Price Tier</option>
       <option value="age">Min Age</option>
     </select>
   </div>
@@ -273,9 +271,9 @@ body{font-family:'Oswald',sans-serif;background:var(--off-white);color:var(--tex
 
 <!-- BOTTOM NAV -->
 <div class="bottom-bar">
-  <a href="https://www.livingsavage.com">
+  <a href="https://www.livingsavage.com/ai-tools-resources">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
-    Return to Home
+    Back to AI Tools &amp; Resources
   </a>
 </div>
 
@@ -341,11 +339,6 @@ function initFilters(){
   cities.forEach(city=>{
     const n=CAMPS.filter(c=>c.city===city).length;
     cityDiv.innerHTML+=`<button class="chip" data-filter="city" data-val="${city}" onclick="toggleFilter(this)">${city} (${n})</button>`;
-  });
-  const priceDiv=document.getElementById('priceFilters');
-  ['$','$$','$$$','unknown'].forEach(tier=>{
-    const n=CAMPS.filter(c=>(c.price_tier||'unknown')===tier || (tier==='unknown' && !['$','$$','$$$'].includes(c.price_tier))).length;
-    if(n>0)priceDiv.innerHTML+=`<button class="chip" data-filter="price" data-val="${tier}" onclick="toggleFilter(this)">${tier==='unknown'?'Not Listed':tier} (${n})</button>`;
   });
 }
 
